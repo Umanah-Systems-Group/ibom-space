@@ -87,13 +87,13 @@ if (films.length) {
 }
 
 /* ------------------------------------------------- how the tug sees */
-// The tracking box follows the satellite in the NASA clip (track measured from the film's frames).
+// The tracking box follows the launch ring in the concept render (track exported from the Blender scene).
 // The readout numbers are a simulated approach, labelled as such on the page.
 const navFilm = document.getElementById('nav-film');
 const track = document.getElementById('track');
 if (navFilm && track) {
   let boxes = null, fps = 10;
-  fetch('assets/film/landsat-track.json').then((r) => r.json()).then((d) => { boxes = d.boxes; fps = d.fps; }).catch(() => {});
+  fetch(navFilm.dataset.track || 'assets/film/landsat-track.json').then((r) => r.json()).then((d) => { boxes = d.boxes; fps = d.fps; }).catch(() => {});
   const range = document.getElementById('ro-range'), speed = document.getElementById('ro-speed'), spin = document.getElementById('ro-spin');
   let t0 = performance.now();
   const frame = () => {

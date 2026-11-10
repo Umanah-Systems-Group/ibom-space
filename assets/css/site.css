@@ -277,7 +277,7 @@ tr.ours td:first-child { box-shadow: inset 3px 0 0 var(--iodine); }
   .nav-head { grid-template-columns: minmax(0, 1fr); text-align: center; }
   .nav-frame { aspect-ratio: auto; }
   .nav-frame video { aspect-ratio: 1 / 1; height: auto; }
-  .nav-frame video { object-position: 30% 50%; }
+  .nav-frame video { object-position: 50% 50%; }
   .readout { position: static; background: var(--surface-2); min-width: 0; grid-template-columns: 1fr 1fr; gap: 6px 16px; padding: 10px 12px; }
   .readout div { flex-direction: column; gap: 0; }
   .readout dt { font-size: 0.75rem; }
