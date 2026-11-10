@@ -208,64 +208,57 @@ const progress = (el) => {
   return Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
 };
 
-/* ------------------------------------------------- jobs: one film, four jobs */
+/* --------------------------------------------- pinned sections that step */
+const stepper = (el, n, onStep) => {
+  let cur = -1;
+  const run = () => {
+    const i = Math.min(n - 1, Math.floor(progress(el) * n * 0.999));
+    if (i !== cur) { cur = i; el.dataset.step = String(i); onStep(i); }
+  };
+  addEventListener('scroll', run, { passive: true }); addEventListener('resize', run); run();
+};
+
+/* jobs: one diagram per job */
 const jobs = document.getElementById('jobs');
 if (jobs) {
-  const vids = [...jobs.querySelectorAll('.k-jobs-film')];
   const items = [...jobs.querySelectorAll('.k-jobs-list li')];
-  let cur = -1, front = 0, inView = false;
-  const setJob = (i) => {
-    if (i === cur) return; cur = i;
+  stepper(jobs, items.length, (i) => items.forEach((li, k) => li.classList.toggle('on', k === i)));
+}
+
+/* cutaway: draw the tug, then light one system at a time */
+const cut = document.getElementById('cutaway');
+if (cut) {
+  cut.querySelectorAll('.ln').forEach((e) => e.setAttribute('pathLength', '1'));
+  const items = [...cut.querySelectorAll('.cut-list li')];
+  const dots = document.createElement('div'); dots.className = 'cut-dots'; dots.setAttribute('aria-hidden', 'true');
+  dots.innerHTML = items.map(() => '<i></i>').join(''); cut.querySelector('.cut-pin').append(dots);
+  const ds = [...dots.children];
+  new IntersectionObserver((es) => { if (es[0].isIntersecting) cut.classList.add('drawn'); }, { threshold: 0.05 }).observe(cut);
+  if (reduced) cut.classList.add('drawn');
+  stepper(cut, items.length, (i) => {
     items.forEach((li, k) => li.classList.toggle('on', k === i));
-    const name = items[i].dataset.film, next = vids[1 - front];
-    next.src = `assets/film/${name}.mp4`; next.poster = `assets/film/${name}.jpg`;
-    const swap = () => { next.classList.add('on'); vids[front].classList.remove('on'); const old = vids[front]; setTimeout(() => old.pause(), 1200); front = 1 - front; };
-    if (inView && !reduced) next.play().then(swap).catch(swap); else swap();
-  };
-  const onJobs = () => {
-    const p = progress(jobs);
-    setJob(Math.min(items.length - 1, Math.floor(p * items.length * 0.999)));
-    jobs.style.setProperty('--z', (1.12 - p * 0.1).toFixed(3));
-    vids.forEach((v) => v.style.setProperty('--z', (1.12 - p * 0.1).toFixed(3)));
-  };
-  new IntersectionObserver((es) => { inView = es[0].isIntersecting; const v = vids[front]; if (inView && !reduced) v.play().catch(() => {}); else v.pause(); }).observe(jobs);
-  addEventListener('scroll', onJobs, { passive: true }); onJobs();
-}
-
-/* ---------------------------------------- orbits: Earth comes in, orbits draw */
-const orbits = document.getElementById('orbits');
-if (orbits) {
-  const globe = document.getElementById('globe');
-  const tabs = [...orbits.querySelectorAll('[role=tab]')];
-  const select = (name) => {
-    orbits.dataset.orbit = name;
-    tabs.forEach((t) => { const on = t.dataset.orbit === name; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; document.getElementById(t.getAttribute('aria-controls')).hidden = !on; });
-  };
-  tabs.forEach((t, i) => {
-    t.addEventListener('click', () => { userPicked = true; select(t.dataset.orbit); });
-    t.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]; n.focus(); n.click(); } });
+    ds.forEach((d, k) => d.classList.toggle('on', k === i));
   });
-  let userPicked = false;
-  select('leo');
-  const ease = (x) => 1 - Math.pow(1 - x, 3);
-  const onOrbits = () => {
-    const p = progress(orbits);
-    const a = ease(Math.min(1, p / 0.45));            // Earth rises and shrinks to a globe
-    const gs = 2.3 - a * 1.6, gy = 52 - a * 102;     // scale, vertical offset (% of own size)
-    globe.style.setProperty('--gs', gs.toFixed(3));
-    globe.style.setProperty('--gy', `${gy.toFixed(1)}%`);
-    const o = Math.min(1, Math.max(0, (p - 0.42) / 0.12));
-    orbits.style.setProperty('--o', o.toFixed(2));
-    orbits.style.setProperty('--p2', Math.min(1, Math.max(0, (p - 0.3) / 0.3)).toFixed(2));
-    orbits.classList.toggle('show-tabs', o > 0.5);
-    if (!userPicked && o > 0.5) select(p < 0.68 ? 'leo' : p < 0.84 ? 'meo' : 'geo');
-  };
-  addEventListener('scroll', onOrbits, { passive: true }); addEventListener('resize', onOrbits); onOrbits();
+  const zoom = () => { const p = progress(cut); cut.style.setProperty('--cz', (1.06 - p * 0.08).toFixed(3)); };
+  if (!reduced) { addEventListener('scroll', zoom, { passive: true }); zoom(); }
 }
 
-/* ------------------------------------------------ question: slow push-in */
+/* wipes: screens slide open */
+// observe the parent: a clipped element never counts as intersecting
+const wipeIO = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { e.target.querySelectorAll('[data-wipe]').forEach((w) => w.classList.add('in')); wipeIO.unobserve(e.target); } }, { threshold: 0.15 });
+document.querySelectorAll('[data-wipe]').forEach((el, i) => { el.style.transitionDelay = `${(i % 3) * 160}ms`; if (reduced) el.classList.add('in'); });
+if (!reduced) new Set([...document.querySelectorAll('[data-wipe]')].map((el) => el.parentElement)).forEach((p) => wipeIO.observe(p));
+
+/* question: the launch ring draws itself */
 const q = document.querySelector('.k-question');
-if (q && !reduced) {
-  const onQ = () => { const r = q.getBoundingClientRect(); const p = Math.min(1, Math.max(0, 1 - (r.top + r.height) / (innerHeight + r.height))); q.querySelector('.k-q-film').style.setProperty('--qz', (1.18 - p * 0.14).toFixed(3)); };
+if (q) {
+  const onQ = () => { const r = q.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height * 0.4))); q.style.setProperty('--rp', reduced ? 1 : p.toFixed(3)); };
   addEventListener('scroll', onQ, { passive: true }); onQ();
+}
+
+/* footer: the name rises into place */
+const giant = document.querySelector('.foot-giant');
+if (giant) {
+  const onG = () => { const r = giant.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (r.height * 2.2))); giant.style.setProperty('--gy', `${(30 - p * 30).toFixed(1)}%`); giant.style.setProperty('--go', (0.3 + p * 0.7).toFixed(2)); };
+  if (reduced) { giant.style.setProperty('--gy', '0%'); giant.style.setProperty('--go', '1'); } else { addEventListener('scroll', onG, { passive: true }); onG(); }
 }

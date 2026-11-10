@@ -46,7 +46,7 @@
     <h1 id="hero-h" class="k-hero-h"><span>Never</span> <span>Stranded</span></h1>
     <div class="k-hero-foot">
       <p>Agbára grabs any satellite by its launch ring and becomes its engine.</p>
-      <p class="credit">Film: NASA, Landsat, Psyche, Europa Clipper and the ISS</p>
+      <a class="k-scroll" href="#cutaway">Scroll <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
@@ -55,117 +55,133 @@
     <p class="k-big" data-words>Every satellite is launched sitting on a ring. When its fuel runs out, it is stuck where it is. Agbára flies up, grabs that ring and becomes the satellite’s engine: a new orbit, a longer life, or a clean exit.</p>
   </section>
 
-  <!-- What we're building: carousel -->
-  <section class="k-rail" aria-labelledby="rail-h">
-    <div class="k-rail-head">
-      <h2 id="rail-h">The machines we’re building</h2>
-      <div class="k-arrows">
-        <button type="button" data-rail="-1" aria-label="Previous"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
-        <button type="button" data-rail="1" aria-label="Next"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+  <!-- Agbára cutaway: scroll lights each system in turn -->
+  <section class="cut" id="cutaway" aria-labelledby="cut-h">
+    <div class="cut-pin">
+      <div class="cut-head">
+        <p class="eyebrow">Inside Agbára</p>
+        <h2 id="cut-h">One tug. Six systems.<br><span>Every one designed in Easley.</span></h2>
       </div>
+      <figure class="cut-fig" aria-hidden="true">
+        <svg class="cut-svg" viewBox="0 0 1200 640">
+          <defs>
+            <linearGradient id="plume" x1="1" x2="0" y1="0" y2="0"><stop offset="0" stop-color="#b9a6ff" stop-opacity=".95"/><stop offset=".35" stop-color="#8f7bff" stop-opacity=".55"/><stop offset="1" stop-color="#5b4bff" stop-opacity="0"/></linearGradient>
+            <pattern id="cells" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" fill="none" stroke="currentColor" stroke-width=".8" opacity=".55"/></pattern>
+          </defs>
+          <!-- customer launch ring -->
+          <g class="part p-ring"><ellipse cx="1080" cy="320" rx="34" ry="128" class="ln"/><ellipse cx="1080" cy="320" rx="22" ry="112" class="ln thin"/><path d="M1080 192 L1190 192 M1080 448 L1190 448" class="ln thin dash"/><text x="1112" y="178" class="tag">Customer’s launch ring</text></g>
+          <!-- solar wings -->
+          <g class="part p-wing" data-part="1">
+            <rect x="452" y="24" width="250" height="150" class="ln fillcells"/><rect x="452" y="466" width="250" height="150" class="ln fillcells"/>
+            <path d="M577 174V214 M577 426V466" class="ln"/>
+          </g>
+          <!-- bus -->
+          <g class="part p-bus"><rect x="440" y="214" width="274" height="212" rx="6" class="ln strong"/><path d="M440 250H714 M440 390H714" class="ln thin"/></g>
+          <!-- iodine tank -->
+          <g class="part p-tank" data-part="2"><rect x="470" y="262" width="120" height="116" rx="44" class="ln"/><path d="M485 300h90M485 320h90M485 340h90" class="ln thin dash"/></g>
+          <!-- Jagora computer -->
+          <g class="part p-brain" data-part="5"><rect x="616" y="270" width="74" height="54" rx="3" class="ln"/><path d="M628 284h50M628 297h50M628 310h34" class="ln thin"/><rect x="616" y="334" width="74" height="40" rx="3" class="ln"/></g>
+          <!-- cold gas pods -->
+          <g class="part p-pods" data-part="5"><path d="M440 214l-18-18M714 214l18-18M440 426l-18 18M714 426l18 18" class="ln"/><circle cx="418" cy="192" r="8" class="ln"/><circle cx="736" cy="192" r="8" class="ln"/><circle cx="418" cy="448" r="8" class="ln"/><circle cx="736" cy="448" r="8" class="ln"/></g>
+          <!-- Igwe engine + gimbal + plume -->
+          <g class="part p-engine" data-part="3">
+            <path d="M440 290h-30v60h30" class="ln"/><circle cx="398" cy="320" r="12" class="ln"/>
+            <path d="M386 284 L330 270 L330 370 L386 356 Z" class="ln strong"/><ellipse cx="330" cy="320" rx="10" ry="50" class="ln"/>
+            <path class="plume" d="M326 276 C 230 250, 90 260, 10 320 C 90 380, 230 390, 326 364 Z" fill="url(#plume)"/>
+          </g>
+          <!-- Anya sensors + scan -->
+          <g class="part p-eyes" data-part="4">
+            <rect x="714" y="236" width="40" height="28" rx="3" class="ln"/><circle cx="764" cy="250" r="9" class="ln"/>
+            <rect x="714" y="376" width="40" height="28" rx="3" class="ln"/><circle cx="764" cy="390" r="9" class="ln"/>
+            <path class="scan" d="M773 250 L1060 196 M773 250 L1060 444 M773 390 L1060 196 M773 390 L1060 444"/>
+            <rect class="lock" x="1036" y="180" width="88" height="280"/>
+          </g>
+          <!-- Jide clamp -->
+          <g class="part p-clamp" data-part="0">
+            <path d="M714 300h120 M714 340h120" class="ln"/><path d="M834 280h70l24 18v44l-24 18h-70z" class="ln strong"/>
+            <path class="jaw j1" d="M928 298 L1040 230 L1060 238"/><path class="jaw j2" d="M928 320 L1046 320"/><path class="jaw j3" d="M928 342 L1040 410 L1060 402"/>
+          </g>
+        </svg>
+      </figure>
+      <ol class="cut-list">
+        <li><span class="n">01</span><h3>Jide grabs the ring</h3><p>A three-jaw clamp closes around the launch ring almost every satellite already carries. No changes to the customer’s spacecraft.</p></li>
+        <li><span class="n">02</span><h3>Wings for days of thrust</h3><p>Two solar wings power the engine for the long, quiet burns that move a satellite.</p></li>
+        <li><span class="n">03</span><h3>Solid iodine on board</h3><p>Igwe’s fuel sits in the tank as a solid. It launches unpressurised and can wait fuelled for years.</p></li>
+        <li><span class="n">04</span><h3>Igwe, the engine</h3><p>An electric thruster on a gimbal that steers the push straight through the joined pair.</p></li>
+        <li><span class="n">05</span><h3>Anya, the eyes</h3><p>Lidar and cameras find the ring in sunlight or darkness. Two answers must agree before the tug moves closer.</p></li>
+        <li><span class="n">06</span><h3>Jagora, the brain</h3><p>Guidance on a fault-tolerant two-processor computer that holds, backs off or commits, and small gas pods for the last metres.</p></li>
+      </ol>
     </div>
-    <ul class="k-rail-track" id="rail">
-      <li class="k-card">
-        <a href="satellites.html#tug">
-          <video class="loop" muted loop playsinline preload="none" poster="assets/film/landsat.jpg" aria-hidden="true"><source src="assets/film/landsat.mp4" type="video/mp4"></video>
-          <span class="k-card-copy"><strong>Agbára</strong><span>The servicing tug. Grabs a satellite by its launch ring, moves it, lets go, and flies to the next one.</span></span>
-        </a>
-      </li>
-      <li class="k-card">
-        <a href="satellites.html#igwe">
-          <video class="loop" muted loop playsinline preload="none" poster="assets/film/psyche.jpg" aria-hidden="true"><source src="assets/film/psyche.mp4" type="video/mp4"></video>
-          <span class="k-card-copy"><strong>Igwe</strong><span>Electric Hall thrusters that run on solid iodine. The engine inside Agbára, and sold as parts.</span></span>
-        </a>
-      </li>
-      <li class="k-card">
-        <a href="satellites.html#navigation">
-          <img src="assets/film/landsat.jpg" width="1280" height="720" loading="lazy" alt="">
-          <span class="k-target" aria-hidden="true"></span>
-          <span class="k-card-copy"><strong>Anya</strong><span>Agbára’s eyes. Lidar and cameras that find the launch ring and two answers that must agree.</span></span>
-        </a>
-      </li>
-      <li class="k-card">
-        <a href="satellites.html#caelum">
-          <img src="assets/film/iss-array.webp" width="1600" height="1064" loading="lazy" alt="">
-          <span class="k-card-copy"><strong>Caelum</strong><span>Radios, gimbal-free laser heads and antennas, sold as parts, and a showcase spacecraft that flies them.</span></span>
-        </a>
-      </li>
-      <li class="k-card">
-        <a href="about.html#easley">
-          <img src="assets/img/easley-3d.jpg" width="1440" height="900" loading="lazy" alt="">
-          <span class="k-card-copy"><strong>Easley</strong><span>Where every mission flies first. Our sister company’s engineering platform.</span></span>
-        </a>
-      </li>
-    </ul>
   </section>
 
-  <!-- Agbára: four jobs, scroll-driven -->
+  <!-- Four jobs, as moving diagrams -->
   <section class="k-jobs" id="jobs" aria-labelledby="jobs-h">
     <div class="k-jobs-stage">
-      <video class="k-jobs-film on" muted loop playsinline preload="none" poster="assets/film/landsat.jpg" aria-hidden="true"></video>
-      <video class="k-jobs-film" muted loop playsinline preload="none" aria-hidden="true"></video>
       <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      <span class="k-reticle" aria-hidden="true"></span>
-      <h2 class="k-jobs-h" id="jobs-h">Ibom Space is building<br><span>one tug for four jobs</span></h2>
+      <h2 class="k-jobs-h" id="jobs-h">One tug<br><span>for four jobs</span></h2>
+      <svg class="jobs-svg" viewBox="-600 -340 1200 680" aria-hidden="true">
+        <path class="planet" d="M-640 330 A 1300 1300 0 0 1 640 330"/>
+        <g class="scene sc-0">
+          <path class="orb" d="M-560 140 A 900 520 0 0 1 560 140"/><path class="orb" d="M-560 -40 A 900 520 0 0 1 560 -40"/>
+          <path id="mv0" class="track-path" d="M-420 82 C -200 -10, -20 -120, 200 -122"/>
+          <g class="pair"><circle r="12" class="sat-c"/><circle r="7" cx="-19" class="sat-t"/><animateMotion dur="5s" repeatCount="indefinite" rotate="auto"><mpath href="#mv0"/></animateMotion></g>
+        </g>
+        <g class="scene sc-1">
+          <path class="orb" d="M-560 -80 A 900 520 0 0 1 560 -80"/>
+          <g class="pair" transform="translate(0 -170)"><circle r="12" class="sat-c"/><circle r="7" cx="-19" class="sat-t"/><path class="puff" d="M-20 0 h-46"/></g>
+          <text class="note" x="0" y="-210" text-anchor="middle">Holding station</text>
+        </g>
+        <g class="scene sc-2">
+          <path class="orb" d="M-560 20 A 900 520 0 0 1 560 20"/>
+          <path id="mv2" class="track-path" d="M-380 -30 C -120 -70, 120 -20, 260 120 S 360 300, 380 330"/>
+          <g class="pair fade"><circle r="12" class="sat-c"/><circle r="7" cx="-19" class="sat-t"/><animateMotion dur="5s" repeatCount="indefinite" rotate="auto"><mpath href="#mv2"/></animateMotion></g>
+        </g>
+        <g class="scene sc-3">
+          <circle r="12" class="sat-c" cy="-60"/>
+          <ellipse class="orb" cx="0" cy="-60" rx="110" ry="60"/>
+          <g><circle r="7" class="sat-t"/><animateMotion dur="6s" repeatCount="indefinite" path="M110 -60 A110 60 0 1 1 -110 -60 A110 60 0 1 1 110 -60"/></g>
+        </g>
+      </svg>
       <ol class="k-jobs-list">
-        <li data-film="orbit"><span class="n">01</span><h3>Relocation</h3><p>Raise, lower or move a satellite to a new slot, even one never designed to move.</p></li>
-        <li data-film="array"><span class="n">02</span><h3>Life extension</h3><p>Stay attached and keep the satellite on station after its own fuel runs out.</p></li>
-        <li data-film="landsat"><span class="n">03</span><h3>Disposal</h3><p>Push a dead or retiring satellite down to burn up, inside the five-year rule.</p></li>
-        <li data-film="psyche"><span class="n">04</span><h3>Inspection</h3><p>Nyoka flies around a satellite and images it before any capture, or as a service on its own.</p></li>
+        <li><span class="n">01</span><h3>Relocation</h3><p>Raise, lower or move a satellite to a new slot, even one never designed to move.</p></li>
+        <li><span class="n">02</span><h3>Life extension</h3><p>Stay attached and keep the satellite on station after its own fuel runs out.</p></li>
+        <li><span class="n">03</span><h3>Disposal</h3><p>Push a dead or retiring satellite down to burn up, inside the five-year rule.</p></li>
+        <li><span class="n">04</span><h3>Inspection</h3><p>Nyoka flies around a satellite and images it before any capture, or as a service on its own.</p></li>
       </ol>
-      <p class="credit k-jobs-credit">Film: NASA</p>
     </div>
   </section>
 
-  <!-- Orbits -->
-  <section class="k-orbits" id="orbits" aria-labelledby="orbits-h">
-    <div class="k-orbits-pin">
-      <h2 class="k-orbits-h" id="orbits-h">Built to reach the satellites<br>others can’t</h2>
-      <div class="k-globe" id="globe">
-        <img src="assets/img/earth.webp" srcset="assets/img/earth-1000.webp 1000w, assets/img/earth.webp 2000w" sizes="(max-width: 760px) 92vw, 78vh" width="2000" height="2000" alt="The Earth from space, with Africa and Europe crossing from day into night">
-        <svg class="k-orbit-svg" viewBox="-500 -500 1000 1000" aria-hidden="true">
-          <line x1="-267" y1="0" x2="267" y2="0"/><line x1="0" y1="-267" x2="0" y2="267"/>
-          <circle class="ring-grid" r="267"/>
-          <ellipse class="o o-leo" rx="455" ry="160" transform="rotate(-24)"/>
-          <ellipse class="o o-meo" rx="620" ry="250" transform="rotate(10)"/>
-          <ellipse class="o o-geo" rx="800" ry="90" transform="rotate(-4)"/>
-          <circle class="sat s-leo" r="5"><animateMotion dur="9s" repeatCount="indefinite" path="M455 0 A455 160 0 1 1 -455 0 A455 160 0 1 1 455 0" rotate="0"/></circle>
-          <circle class="sat s-meo" r="5"><animateMotion dur="18s" repeatCount="indefinite" path="M620 0 A620 250 0 1 1 -620 0 A620 250 0 1 1 620 0"/></circle>
-          <circle class="sat s-geo" r="5"><animateMotion dur="30s" repeatCount="indefinite" path="M800 0 A800 90 0 1 1 -800 0 A800 90 0 1 1 800 0"/></circle>
-        </svg>
-      </div>
-      <div class="k-tabs" role="tablist" aria-label="Orbits">
-        <button role="tab" aria-selected="true" aria-controls="t-leo" id="b-leo" data-orbit="leo">LEO</button>
-        <button role="tab" aria-selected="false" aria-controls="t-meo" id="b-meo" data-orbit="meo" tabindex="-1">MEO</button>
-        <button role="tab" aria-selected="false" aria-controls="t-geo" id="b-geo" data-orbit="geo" tabindex="-1">GEO</button>
-      </div>
-      <div class="k-tab-copy">
-        <p role="tabpanel" id="t-leo" aria-labelledby="b-leo">Low Earth orbit is where Agbára starts. Most satellites fly here, along with the constellations that will need satellites moved and retired by the hundred. Our first tug is sized for it.</p>
-        <p role="tabpanel" id="t-meo" aria-labelledby="b-meo" hidden>Medium Earth orbit carries navigation and new broadband fleets. Igwe’s iodine thrusters climb slowly but efficiently, so a tug can raise itself here without a big chemical stage. Later.</p>
-        <p role="tabpanel" id="t-geo" aria-labelledby="b-geo" hidden>Geostationary orbit, 36,000 km up, holds the most valuable satellites of all. A larger Agbára with NASA’s big-ring gripper, for launch rings 937 to 1,666 mm across, is how we plan to extend their lives. Later.</p>
+  <!-- Built on our own software -->
+  <section class="soft" id="software" aria-labelledby="soft-h">
+    <div class="soft-head">
+      <p class="eyebrow">Our software</p>
+      <h2 id="soft-h" data-reveal>Flown thousands of times<br><span>before it is ever built</span></h2>
+      <p class="lead" data-reveal>Every part of Agbára lives in Easley, our engineering platform: one living model of the spacecraft, every approach, capture and push simulated thousands of times, with sensor failures and aborts thrown in. And LoqSat, our coordination layer, routes collision warnings and agreed moves between operators, so every move Agbára makes is announced and on the record.</p>
+    </div>
+    <div class="soft-shots">
+      <figure class="wipe" data-wipe><img src="assets/img/easley-3d.jpg" width="1440" height="900" loading="lazy" alt="Easley’s 3D workspace with a spacecraft model and its parts list"><figcaption><strong>Easley</strong> Design, simulate and test in one place.</figcaption></figure>
+      <figure class="wipe" data-wipe><img src="assets/img/easley-gnc.jpg" width="1200" height="812" loading="lazy" alt="Easley’s pointing and attitude page with replay and charts"><figcaption><strong>Easley</strong> Guidance and pointing, replayed and checked.</figcaption></figure>
+      <div class="loq wipe" data-wipe>
+        <svg viewBox="0 0 400 240" aria-hidden="true"><path class="loq-orb" d="M-20 200 C 120 120, 280 120, 420 60"/><path class="loq-orb b" d="M-20 60 C 120 110, 260 160, 420 210"/><circle class="loq-hit" cx="200" cy="133" r="16"/><circle class="loq-a" r="5"><animateMotion dur="6s" repeatCount="indefinite" path="M-20 200 C 120 120, 280 120, 420 60"/></circle><circle class="loq-b" r="5"><animateMotion dur="6s" repeatCount="indefinite" path="M-20 60 C 120 110, 260 160, 420 210"/></circle></svg>
+        <p><strong>LoqSat</strong> Warnings shared, moves agreed, every decision kept.</p>
       </div>
     </div>
   </section>
 
   <!-- The question -->
   <section class="k-question" aria-labelledby="q-h">
-    <video class="loop k-q-film" muted loop playsinline preload="none" poster="assets/film/array.jpg" aria-hidden="true"><source src="assets/film/array.mp4" type="video/mp4"></video>
+    <svg class="q-ring" viewBox="0 0 400 400" aria-hidden="true"><circle cx="200" cy="200" r="180"/><circle class="q-ring-in" cx="200" cy="200" r="160"/></svg>
     <div class="k-q-copy">
-      <h2 id="q-h">“What happens to a satellite when its fuel runs out?”</h2>
-      <p>Today, nothing. It drifts until it falls, or it becomes debris. Agbára is our answer.</p>
-      <a class="btn btn-glass" href="satellites.html">Meet Agbára <span aria-hidden="true">→</span></a>
+      <h2 id="q-h" data-reveal>“What happens to a satellite when its fuel runs out?”</h2>
+      <p data-reveal>Today, nothing. It drifts until it falls, or it becomes debris. Agbára is our answer.</p>
+      <a class="btn btn-glass" href="satellites.html" data-reveal>Meet Agbára <span aria-hidden="true">→</span></a>
     </div>
-    <p class="credit">Film: NASA, Europa Clipper’s solar array</p>
   </section>
 
   <!-- Close -->
   <section class="k-close" aria-labelledby="close-h">
-    <h2 id="close-h" class="k-close-h">Stranded? We’ll come get it.</h2>
-    <div class="k-close-film">
-      <video class="loop" muted loop playsinline preload="none" poster="assets/film/orbit.jpg" aria-hidden="true"><source src="assets/film/orbit.mp4" type="video/mp4"></video>
-      <a class="btn btn-glass btn-big" href="mailto:hello@ibomspace.com">Talk to us <span aria-hidden="true">→</span></a>
-      <p class="credit">Film: NASA, Earth from the International Space Station</p>
-    </div>
+    <h2 id="close-h" class="k-close-h" data-reveal>Stranded? We’ll come get it.</h2>
+    <div class="actions k-close-actions" data-reveal><a class="btn btn-glass btn-big" href="mailto:hello@ibomspace.com">Talk to us <span aria-hidden="true">→</span></a></div>
   </section>
 </main>
 
@@ -176,8 +192,9 @@
     <nav class="foot-col" aria-label="Family"><a href="https://easley.umanahsystems.com" rel="noopener">Easley</a><a href="https://umanahsystems.com" rel="noopener">Umanah Systems Group</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav>
     <div class="foot-col"><a href="mailto:hello@ibomspace.com">hello@ibomspace.com</a><span class="muted">Part of Umanah Systems Group</span></div>
   </div>
-  <p class="foot-credit">Film and photographs: NASA, public domain (Landsat, Psyche, Europa Clipper solar array, Earth and solar arrays from the International Space Station). Earth globe rendered by Ibom Space from NASA Blue Marble and Black Marble imagery. They show NASA missions, not Ibom Space hardware. Use of NASA imagery does not imply endorsement by NASA. Type: Archivo (SIL Open Font License).</p>
+  <p class="foot-credit">Footage: NASA, public domain. It shows other missions, not Ibom Space hardware, and implies no endorsement.</p>
   <p class="foot-copy">© 2026 Ibom Space. All rights reserved.</p>
+  <p class="foot-giant" aria-hidden="true">Ibom Space</p>
 </footer>
 </body>
 </html>

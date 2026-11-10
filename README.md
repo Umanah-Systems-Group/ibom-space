@@ -5,7 +5,7 @@ The Ibom Space website. A static site: no build step, no framework, no tracking.
 - `index.html`: the home page, laid out like a film (headline cut out of the footage, scroll-driven jobs and orbits).
 - `satellites.html`: Agbára, Anya, Igwe, Caelum and the NASA technology table.
 - `about.html`: the company, Easley, the plan and contact.
-- `assets/img/earth.webp`: Earth rendered by us from NASA Blue Marble and Black Marble textures.
+- Copy rule: no NASA or patents in page copy; footage is credited once in the footer.
 - `assets/film/` — NASA public-domain footage (Earth from the ISS, Landsat, Psyche, Europa Clipper array) cut from the Umanah Systems Group site reel, plus `landsat-track.json`, the satellite position measured frame by frame for the navigation overlay.
 - `assets/js/site.js` — the tug film that changes per mission step, the navigation tracking overlay, reveals, video loops, menu.
 - `assets/css/site.css` — all styles. On phones, headings, buttons and icons are centred.
