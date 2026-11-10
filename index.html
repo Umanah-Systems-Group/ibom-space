@@ -15,14 +15,11 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/site.css">
-<script type="importmap">{"imports":{"three":"./assets/js/vendor/three.module.min.js","three/addons/":"./assets/js/vendor/addons/"}}</script>
 <script type="module" src="assets/js/site.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<canvas id="stage" aria-hidden="true"></canvas>
-<div class="stage-fallback" aria-hidden="true"></div>
 
 <header class="bar" id="bar">
   <a class="wordmark" href="#top" aria-label="Ibom Space, home">Ibom Space</a>
@@ -30,6 +27,7 @@
     <a href="#tug">Tug</a>
     <a href="#hartwigg">Hartwigg</a>
     <a href="#caelum">Caelum</a>
+    <a href="#navigation">Navigation</a>
     <a href="#technology">Technology</a>
     <a href="#easley">Easley</a>
   </nav>
@@ -41,8 +39,11 @@
 
 <main id="main">
 
-  <!-- Hero: the live 3D stage is the picture -->
-  <section class="hero" id="top" data-stage data-shot="hero" data-shift="0.29" data-shift-m="0,0.2">
+  <!-- Hero: real NASA film of Earth from the ISS -->
+  <section class="hero" id="top">
+    <video class="hero-film" autoplay muted loop playsinline preload="auto" poster="assets/film/orbit.jpg" aria-hidden="true">
+      <source src="assets/film/orbit.mp4" type="video/mp4">
+    </video>
     <div class="hero-copy" data-reveal>
       <h1>Give any satellite an engine.</h1>
       <p class="lead">Ibom Space builds iodine electric propulsion, communications parts and a servicing tug that grabs a satellite by its launch ring and moves it, all stacked from NASA-patented technology.</p>
@@ -51,73 +52,112 @@
         <a class="btn btn-quiet" href="#contact">Talk to us</a>
       </div>
     </div>
-    <p class="render-note">Concept render, drawn in real time. Ibom Space has no flight hardware yet.</p>
+    <p class="credit">Film: NASA, Earth from the International Space Station</p>
   </section>
 
-  <!-- The tug, told as a mission: the stage stays, the steps scroll -->
-  <section class="tug" id="tug" data-stage>
-    <div class="tug-intro" data-shot="find" data-shift="0.22" data-shift-m="0,0.22">
-      <div class="col" data-reveal>
-        <h2>Grab it by the ring. Move it anywhere.</h2>
-        <p>Almost every satellite bigger than a CubeSat still carries the ring it was launched on. Our servicing tug flies up to it, clamps onto that ring, and becomes the satellite’s engine. Then it lets go and flies to the next one.</p>
-        <p class="muted">Working name: the Ibom tug. Aiming for a ground-test programme in 2027 and a flight demonstration after that.</p>
-        <ol class="step-index" aria-label="Mission steps">
-          <li><a href="#step-find">Find</a></li>
-          <li><a href="#step-inspect">Close in</a></li>
-          <li><a href="#step-capture">Capture</a></li>
-          <li><a href="#step-push">Push</a></li>
-          <li><a href="#step-release">Release</a></li>
-          <li><a href="#step-next">Next customer</a></li>
-        </ol>
-      </div>
+  <!-- The tug, told as a mission: the film stays, the steps scroll -->
+  <section class="tug" id="tug">
+    <div class="tug-film" aria-hidden="true">
+      <video class="tf" muted loop playsinline preload="none" poster="assets/film/landsat.jpg"></video>
+      <video class="tf" muted loop playsinline preload="none"></video>
+      <p class="credit tug-credit" id="tug-credit">Film: NASA, a Landsat satellite in orbit</p>
     </div>
-
-    <article class="step" id="step-find" data-shot="find" data-shift="0.22" data-shift-m="0,0.22">
-      <div class="col" data-reveal>
-        <h3>Find the customer</h3>
-        <p>The tug rides up as a rideshare payload. Its main tank holds iodine as a solid, so it launches unpressurised. Hartwigg spirals it up to the customer’s orbit and parks it behind, in the same plane.</p>
-        <p>From about 1.2 km, a NASA Kodiak-type lidar locks on. NASA’s published figure for that lidar is 2 cm ranging accuracy.</p>
+    <div class="tug-steps">
+      <div class="tug-intro" data-film="landsat" data-credit="Film: NASA, a Landsat satellite in orbit">
+        <div class="col" data-reveal>
+          <h2>Grab it by the ring. Move it anywhere.</h2>
+          <p>Almost every satellite bigger than a CubeSat still carries the ring it was launched on. Our servicing tug flies up to it, clamps onto that ring, and becomes the satellite’s engine. Then it lets go and flies to the next one.</p>
+          <p class="muted">Working name: the Ibom tug. It is a design today; the film shows NASA spacecraft, not Ibom hardware. We aim for ground tests in 2027 and a flight demonstration after that.</p>
+          <ol class="step-index" aria-label="Mission steps">
+            <li><a href="#step-find">Find</a></li>
+            <li><a href="#step-inspect">Close in</a></li>
+            <li><a href="#step-capture">Capture</a></li>
+            <li><a href="#step-push">Push</a></li>
+            <li><a href="#step-release">Release</a></li>
+            <li><a href="#step-next">Next customer</a></li>
+          </ol>
+        </div>
       </div>
-    </article>
 
-    <article class="step" id="step-inspect" data-shot="inspect" data-shift="0.22" data-shift-m="0,0.22">
-      <div class="col" data-reveal>
-        <h3>Close in, slowly</h3>
-        <p>Inside the last kilometre the Hall thruster switches off so its plume never touches the customer. Small cold-gas pods, based on a flight-proven NASA Johnson design, do the fine moves.</p>
-        <p>The tug holds at set distances for a go from the ground. From 35 m the lidar switches to 3-D imaging, finds the ring and checks the customer’s spin. Every trajectory drifts safely away if the tug goes quiet.</p>
-      </div>
-    </article>
+      <article class="step" id="step-find" data-film="orbit" data-credit="Film: NASA, Earth from the International Space Station">
+        <div class="col" data-reveal>
+          <h3>Find the customer</h3>
+          <p>The tug rides up as a rideshare payload. Its main tank holds iodine as a solid, so it launches unpressurised. Hartwigg spirals it up to the customer’s orbit and parks it behind, in the same plane.</p>
+          <p>From about 1.2 km, a NASA Kodiak-type lidar locks on. NASA’s published figure for that lidar is 2 cm ranging accuracy.</p>
+        </div>
+      </article>
 
-    <article class="step" id="step-capture" data-shot="capture" data-shift="0.22" data-shift-m="0,0.2">
-      <div class="col" data-reveal>
-        <h3>Capture</h3>
-        <p>At a few centimetres a second, the tug touches the ring. Sensors on three posts, set 120° apart, trip and the clamp closes. The NASA Goddard clamp design tolerates 25 mm of misplacement either way, and a motor brake locks it shut.</p>
-        <p>Every approach and capture command is authenticated and every docking decision is signed and logged, through our sister company Vigilantyx.</p>
-      </div>
-    </article>
+      <article class="step" id="step-inspect" data-film="landsat" data-credit="Film: NASA, a Landsat satellite in orbit">
+        <div class="col" data-reveal>
+          <h3>Close in, slowly</h3>
+          <p>Inside the last kilometre the Hall thruster switches off so its plume never touches the customer. Small cold-gas pods, based on a flight-proven NASA Johnson design, do the fine moves.</p>
+          <p>The tug holds at set distances for a go from the ground. From 35 m the lidar switches to 3-D imaging, finds the ring and checks the customer’s spin. Every trajectory drifts safely away if the tug goes quiet.</p>
+        </div>
+      </article>
 
-    <article class="step" id="step-push" data-shot="push" data-shift="0.22" data-shift-m="0,0.22">
-      <div class="col" data-reveal>
-        <h3>Become its engine</h3>
-        <p>Small test burns measure the combined mass. A NASA Marshall gimbal steers the Hartwigg thruster to push straight through the pair’s centre of mass, and the tug fires in sunlight for days or weeks.</p>
-        <p>The same push serves three jobs: dispose of a satellite, move it to a new orbit, or keep it on station after its own fuel runs out.</p>
-      </div>
-    </article>
+      <article class="step" id="step-capture" data-film="psyche" data-credit="Film: NASA, the Psyche spacecraft during assembly">
+        <div class="col" data-reveal>
+          <h3>Capture</h3>
+          <p>At a few centimetres a second, the tug touches the ring. Sensors on three posts, set 120° apart, trip and the clamp closes. The NASA Goddard clamp design tolerates 25 mm of misplacement either way, and a motor brake locks it shut.</p>
+          <p>Every approach and capture command is authenticated and every docking decision is signed and logged, through our sister company Vigilantyx.</p>
+        </div>
+      </article>
 
-    <article class="step" id="step-release" data-shot="release" data-shift="0.22" data-shift-m="0,0.22">
-      <div class="col" data-reveal>
-        <h3>Let go</h3>
-        <p>The clamp opens and the cold-gas pods back the tug away along a safe corridor. For a disposal, the tug lets go low enough that air drag finishes the descent, and the old satellite burns up.</p>
-      </div>
-    </article>
+      <article class="step" id="step-push" data-film="array" data-credit="Film: NASA, Europa Clipper’s solar array during testing">
+        <div class="col" data-reveal>
+          <h3>Become its engine</h3>
+          <p>Small test burns measure the combined mass. A NASA Marshall gimbal steers the Hartwigg thruster to push straight through the pair’s centre of mass, and the tug fires in sunlight, on solar power, for days or weeks.</p>
+          <p>The same push serves three jobs: dispose of a satellite, move it to a new orbit, or keep it on station after its own fuel runs out.</p>
+        </div>
+      </article>
 
-    <article class="step" id="step-next" data-shot="next" data-shift="0.22" data-shift-m="0,0.22">
-      <div class="col" data-reveal>
-        <h3>On to the next one</h3>
-        <p>Constellations put many satellites in each orbital plane, so one tug can serve several customers in turn. When its iodine and cold gas run low, it disposes of itself.</p>
-        <a class="btn btn-ink" href="#contact">Talk to us about the tug</a>
+      <article class="step" id="step-release" data-film="orbit" data-credit="Film: NASA, Earth from the International Space Station">
+        <div class="col" data-reveal>
+          <h3>Let go</h3>
+          <p>The clamp opens and the cold-gas pods back the tug away along a safe corridor. For a disposal, the tug lets go low enough that air drag finishes the descent, and the old satellite burns up.</p>
+        </div>
+      </article>
+
+      <article class="step" id="step-next" data-film="landsat" data-credit="Film: NASA, a Landsat satellite in orbit">
+        <div class="col" data-reveal>
+          <h3>On to the next one</h3>
+          <p>Constellations put many satellites in each orbital plane, so one tug can serve several customers in turn. When its iodine and cold gas run low, it disposes of itself.</p>
+          <a class="btn btn-ink" href="#navigation">See how it navigates</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- How the tug sees -->
+  <section class="nav-sec" id="navigation" aria-labelledby="nav-h">
+    <div class="wrap">
+      <div class="nav-head">
+        <h2 id="nav-h" data-reveal>How the tug sees</h2>
+        <p data-reveal>Our tug navigates to the one thing it grabs: the customer’s launch ring. It has to know where that ring is, how fast the gap is closing and which way the satellite is turned, with no help from the satellite. Lidar and cameras on board answer that many times a second.</p>
       </div>
-    </article>
+      <figure class="nav-view" data-reveal>
+        <div class="nav-frame" data-ui>
+          <video id="nav-film" muted loop playsinline preload="none" poster="assets/film/landsat.jpg" aria-label="NASA film of a Landsat satellite in orbit, with an illustration of the tug’s tracking box and navigation readout laid over it">
+            <source src="assets/film/landsat.mp4" type="video/mp4">
+          </video>
+          <div class="track" id="track" aria-hidden="true"><span class="track-tag">Launch ring locked</span></div>
+          <dl class="readout" aria-label="Illustrative navigation readout">
+            <div><dt>Range</dt><dd id="ro-range">35.0 m</dd></div>
+            <div><dt>Closing speed</dt><dd id="ro-speed">2.0 cm/s</dd></div>
+            <div><dt>Customer spin</dt><dd id="ro-spin">0.21 °/s</dd></div>
+            <div><dt>Hold at 35 m</dt><dd>Go received</dd></div>
+            <div><dt>Lidar and camera</dt><dd>Agree</dd></div>
+          </dl>
+        </div>
+        <figcaption>Illustration: our tracking overlay drawn on NASA film of a Landsat satellite. The numbers are a simulated approach, not flight data. Our navigation software is in design.</figcaption>
+      </figure>
+      <ol class="nav-steps">
+        <li data-reveal><h3>Lidar</h3><p>NASA’s Kodiak rendezvous lidar ranges the customer from about 1.2 km, then measures its full 3-D pose from 35 m down to 1.6 m, in sunlight or darkness.</p></li>
+        <li data-reveal><h3>Cameras</h3><p>Narrow and wide stereo cameras, a thermal camera and an LED light for eclipse cover the far approach and the last 1.6 m, where the lidar is too close to see.</p></li>
+        <li data-reveal><h3>Two answers must agree</h3><p>One solver fits the launch ring’s ellipse in the camera image; another matches the satellite’s 3-D shape in the lidar data. If they disagree, the tug holds or backs off.</p></li>
+        <li data-reveal><h3>Proven in Easley</h3><p>Every approach is flown many thousands of times in Easley’s simulation, including sensor failures and aborts, before the tug ever leaves the ground.</p></li>
+      </ol>
+    </div>
   </section>
 
   <!-- What the tug sells -->
@@ -145,10 +185,10 @@
   <!-- Hartwigg -->
   <section class="product hartwigg" id="hartwigg" aria-labelledby="hartwigg-h">
     <figure class="film" data-reveal>
-      <video class="loop" muted loop playsinline preload="none" poster="assets/video/hartwigg.jpg" aria-label="Concept render of a Hartwigg iodine Hall thruster firing on its gimbal, next to its power unit and iodine tank">
-        <source src="assets/video/hartwigg.mp4" type="video/mp4">
+      <video class="loop" muted loop playsinline preload="none" poster="assets/film/psyche.jpg" aria-label="NASA film of the Psyche spacecraft being worked on in a clean room">
+        <source src="assets/film/psyche.mp4" type="video/mp4">
       </video>
-      <figcaption>Concept render of a Hartwigg kit: thruster on its gimbal, power unit and iodine tank.</figcaption>
+      <figcaption>Film: NASA. The Psyche spacecraft during assembly. Psyche travels on Hall-effect thrusters, the family Hartwigg belongs to.</figcaption>
     </figure>
     <div class="product-copy">
       <h2 id="hartwigg-h" data-reveal>Hartwigg iodine propulsion</h2>
@@ -184,13 +224,11 @@
 
   <!-- Caelum showcase spacecraft -->
   <section class="showcase" aria-labelledby="showcase-h">
-    <video class="loop showcase-film" muted loop playsinline preload="none" poster="assets/video/caelum.jpg" aria-label="Concept render of the Caelum showcase spacecraft over Earth, its laser head lit and its Hartwigg thruster firing">
-      <source src="assets/video/caelum.mp4" type="video/mp4">
-    </video>
+    <img class="showcase-film" src="assets/film/iss-array.webp" width="1600" height="1064" loading="lazy" alt="Solar arrays of the International Space Station glowing gold above the curve of the Earth">
     <div class="showcase-copy" data-reveal>
       <h2 id="showcase-h">Caelum, the proof in orbit</h2>
       <p>A showcase spacecraft that flies Hartwigg and Caelum together, so customers can watch both work before they buy. It is built on a bought bus and is not for sale. It may also be the first friendly target our tug docks with.</p>
-      <p class="small">Concept render.</p>
+      <p class="small">Photo: NASA, International Space Station solar arrays. Caelum is a design; it has not flown.</p>
     </div>
   </section>
 
@@ -244,6 +282,12 @@
       <div class="plan-head">
         <h2 id="plan-h" data-reveal>Where we are</h2>
         <p data-reveal>Today Ibom Space is a design and a plan, with no flight hardware. This is the order in which we intend to prove it, each step with evidence a buyer can check.</p>
+        <figure class="plan-film" data-reveal>
+          <video class="loop" muted loop playsinline preload="none" poster="assets/film/array.jpg" aria-label="NASA film of Europa Clipper’s large solar array unfolded in a test hall">
+            <source src="assets/film/array.mp4" type="video/mp4">
+          </video>
+          <figcaption>Film: NASA. Europa Clipper’s solar array during testing: the kind of ground proof we will publish.</figcaption>
+        </figure>
       </div>
       <ol class="plan-list">
         <li data-reveal><span class="when">Early 2027</span><span class="what">Easley flies a complete tug mission: approach, capture, push and release, with every abort case passing.</span></li>
@@ -277,8 +321,9 @@
   <div class="foot-line">
     <p>Ibom Space, part of Umanah Systems Group.</p>
     <nav aria-label="Legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://easley.umanahsystems.com" rel="noopener">Easley</a></nav>
-    <p>© 2026. Every spacecraft shown is a concept render made by Ibom Space.</p>
+    <p>© 2026 Ibom Space.</p>
   </div>
+  <p class="foot-credit">Film and photographs: NASA, public domain (Earth from the International Space Station, Landsat, Psyche, Europa Clipper solar array, International Space Station solar arrays). They show NASA missions, not Ibom Space hardware. Use of NASA imagery does not imply endorsement by NASA. Type: Archivo (SIL Open Font License).</p>
 </footer>
 </body>
 </html>
