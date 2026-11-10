@@ -596,3 +596,11 @@ html { scroll-padding-top: 64px; }
   .foot-giant { font-size: 11vw; }
 }
 @media (max-width: 760px) { caption { text-align: center; } }
+
+/* scroll film */
+.scrub { position: relative; height: var(--len, 400vh); background: #000; }
+.scrub-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.scrub-film { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.scrub-notes p, .scrub-notes div { position: absolute; z-index: 2; left: var(--m); top: 50%; width: min(420px, 80vw); margin: 0; transform: translateY(-40%); opacity: 0; transition: opacity .6s ease, transform .8s var(--ease-out); }
+.scrub-notes .on { opacity: 1; transform: translateY(-50%); }
+@media (max-width: 760px) { .scrub-notes p, .scrub-notes div { left: 20px; right: 20px; width: auto; top: auto; bottom: 40px; transform: translateY(12px); text-align: center; } .scrub-notes .on { transform: none; } }

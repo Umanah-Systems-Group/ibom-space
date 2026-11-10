@@ -262,3 +262,21 @@ if (giant) {
   const onG = () => { const r = giant.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (r.height * 2.2))); giant.style.setProperty('--gy', `${(30 - p * 30).toFixed(1)}%`); giant.style.setProperty('--go', (0.3 + p * 0.7).toFixed(2)); };
   if (reduced) { giant.style.setProperty('--gy', '0%'); giant.style.setProperty('--go', '1'); } else { addEventListener('scroll', onG, { passive: true }); onG(); }
 }
+
+/* ------------------------------------------- scroll film: the clip follows the scroll
+   <section class="scrub" style="--len: 400vh"><div class="scrub-pin"><video class="scrub-film" muted playsinline preload="auto" src="...">
+   <div class="scrub-notes"><p data-at="0.1-0.35">...</p></div></div></section>
+   Clips must be encoded all-intra or with a short GOP (ffmpeg -g 4) so seeking is smooth. */
+document.querySelectorAll('.scrub').forEach((sec) => {
+  const v = sec.querySelector('.scrub-film');
+  const notes = [...sec.querySelectorAll('[data-at]')].map((n) => { const [a, b] = n.dataset.at.split('-').map(Number); return { n, a, b }; });
+  let want = 0, raf = 0;
+  const seek = () => { raf = 0; if (v.readyState >= 1 && v.duration) { const t = want * (v.duration - 0.05); if (Math.abs(v.currentTime - t) > 0.02) v.currentTime = t; } };
+  const onS = () => {
+    want = progress(sec);
+    notes.forEach(({ n, a, b }) => n.classList.toggle('on', want >= a && want < b));
+    if (!raf) raf = requestAnimationFrame(seek);
+  };
+  v.addEventListener('loadedmetadata', onS);
+  addEventListener('scroll', onS, { passive: true }); onS();
+});
