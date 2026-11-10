@@ -15,9 +15,9 @@ for (const [k, vp] of Object.entries(views)) {
   if (which !== 'both' && which !== k) continue;
   const pg = await b.newPage({ viewport: { width: vp.width, height: vp.height }, isMobile: vp.isMobile, hasTouch: vp.hasTouch });
   pg.on('pageerror', e => console.log('err:', e.message)); pg.on('console', m => { if (m.type() !== 'log') console.log(m.type(), m.text()); });
-  await pg.goto(`http://localhost:${port}/index.html`); await pg.waitForTimeout(2500);
+  await pg.goto(`http://localhost:${port}/${process.env.PAGE || 'index.html'}`); await pg.waitForTimeout(2500);
   for (const y of ys.split(',')) {
-    await pg.evaluate((yy) => { const el = isNaN(+yy) ? document.querySelector(yy) : null; window.scrollTo({ top: el ? el.getBoundingClientRect().top + scrollY : +yy, behavior: 'instant' }); }, y);
+    await pg.evaluate((yy) => { const [sel, off = 0] = yy.split('+'); const el = isNaN(+sel) ? document.querySelector(sel) : null; window.scrollTo({ top: (el ? el.getBoundingClientRect().top + scrollY : +sel) + +off, behavior: 'instant' }); }, y);
     await pg.waitForTimeout(3200);
     await pg.screenshot({ path: `${out}-${k}-${y.replace(/[^a-z0-9]/gi, '')}.png` });
   }
