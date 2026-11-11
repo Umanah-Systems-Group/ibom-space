@@ -632,3 +632,9 @@ html { scroll-padding-top: 64px; }
 }
 .film-head h2 span { color: rgba(238,240,243,.55); }
 @media (max-width: 760px) { .k-jobs-film { object-fit: contain; transform: none; background: #000; } }
+/* scroll films: a still holds the frame until the clip has drawn one */
+.scrub-still { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.scrub-film { z-index: 0; opacity: 0; transition: opacity .4s ease; }
+.film-live .scrub-film { opacity: 1; }
+.film-live .scrub-still { visibility: hidden; transition: visibility 0s .4s; }
+@media (max-width: 760px) { .capture .scrub-still { height: 64%; top: 6%; } }
