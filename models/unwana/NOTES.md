@@ -142,4 +142,80 @@ The close-up files are `closeup-optical-terminal`, `closeup-mli-seam`, `closeup-
   side. The reference side views omit the wings.
 - The USDZ is static (deployed). The deploy animation is only in the GLB and the .blend. I have
   not opened it in Quick Look on an Apple device.
-- No Gaussian-splatting version was made.
+- The Gaussian-splat version is described below (`splat/`).
+
+## Gaussian splat (`splat/`)
+
+A 3D Gaussian Splatting version of the same spacecraft, made to show how a splat compares
+with the Blender mesh. Open `viewer/splat.html` (there is also a "Gaussian splat" button in the
+mesh viewer).
+
+| File | What it is |
+| --- | --- |
+| `splat/unwana-splat.spz` | Compressed splat for the web (SPZ v2, SH degree 3), 9 MB; loaded by `viewer/splat.html` |
+| `splat/unwana-splat.ply` | Full-precision splat in the standard 3DGS `.ply` layout, 81 MB |
+| `splat/splat-compare-*.png` | Blender (Cycles) and the splat from the same camera, side by side |
+| `splat/unwana-splat-orbit.mp4` | A 360° orbit of the splat, 120 frames, 1280x720 |
+| `splat/metrics.json` | Training and held-out scores |
+| `splat/build/` | The scripts that make all of the above |
+
+**How it was made**
+
+1. **Training images.** 194 Blender renders at 1600x900 (48 samples, denoised with Open Image
+   Denoise). Cameras sit on seven elevation rings plus top and bottom, at 3.3 m, and a closer
+   ring at 1.7 m, so the underside is covered too. The lighting stays fixed in world space
+   (the studio rig does not turn with the camera) and the backdrop is hidden. The film is
+   transparent, so every image carries an alpha mask. A soft fill from below, plus a brighter
+   environment, keeps the downward-facing metal readable. Camera poses and intrinsics come
+   straight from Blender (`transforms.json`, NeRF/Blender convention). The starting point
+   cloud is 150k points sampled on the mesh surfaces with their material colours, so no
+   photogrammetry step was needed.
+2. **Training.** gsplat 1.6 and PyTorch 2.14 (CUDA 13) on the Spark's GB10 GPU, in the
+   `nvcr.io/nvidia/cuda:13.0.1-devel` container. 30,000 steps at full resolution, spherical
+   harmonics degree 3, gsplat's default densification. The background colour is randomised
+   every step so the splat learns a clean edge. 175 views train the splat and 19 (every 10th)
+   are held out.
+3. **Export.** Gaussians outside the spacecraft's bounding box (+5 cm) or below 2% opacity
+   are dropped. The `.ply` is written directly, and `ply2spz.py` converts it to SPZ.
+
+**Results**
+
+| | |
+| --- | --- |
+| Held-out views | PSNR 26.6 dB, SSIM 0.947 (19 views the splat never saw) |
+| Gaussians | 419,554 trained; 341,029 in the exported files |
+| Training time | 20.5 min on the GB10 (data rendering about 20 min on the CPU) |
+
+**What the comparison shows**
+
+- From normal viewing distances (the isometrics, front and rear), the splat is very close to
+  the Blender render: the shapes, panel layout, harnesses and solar cells all hold up.
+- **Shiny and transparent materials are where splats struggle.** The gold foil comes out paler
+  and softer, because its sharp, view-dependent glints get averaged. The violet coating on the
+  optical terminal mostly disappears in close-up. Glass is learned as a flat colour, not as
+  refraction.
+- **Close-ups go soft.** No training view was as close as the optical-terminal close-up, so
+  fine detail (fastener heads, thin edges) blurs and some blobs smear.
+- **The lighting is baked in.** The splat replays the lighting it was trained under and cannot
+  be relit, re-materialed, measured or edited part by part. The Blender model (and the GLB) can.
+- The comparison stills use the same fixed lighting for both sides. The main `renders/` use a
+  camera-facing studio rig, so they look slightly different from these.
+
+**Re-running** (from `~/unwana-model` on the Spark):
+
+```bash
+./run_blender.sh unwana.blend -P splat_dataset.py -- $PWD/splat/data 1600 900 48
+./run_blender.sh unwana.blend -P splat_refs.py -- $PWD/splat/refs 1920 1080 128 FrontLeftIso Rear Closeup_OpticalTerminal Front RearRightIso
+# GPU steps run in the CUDA container; gs_setup.sh / gs_setup2.sh build the venv (gsplat compiled for sm_121)
+docker run --rm --gpus all -e UIDGID=$(id -u):$(id -g) -v $PWD:/w nvcr.io/nvidia/cuda:13.0.1-devel-ubuntu24.04 \
+  bash /w/gs_run.sh --data splat/data --out splat/run --steps 30000
+docker run --rm --gpus all -e SCRIPT=splat_render.py -e UIDGID=$(id -u):$(id -g) -v $PWD:/w \
+  nvcr.io/nvidia/cuda:13.0.1-devel-ubuntu24.04 bash /w/gs_run.sh --run splat/run --refs splat/refs --orbit 120
+python3 splat_compare.py splat/refs splat/run/compare splat/out FrontLeftIso:front-left-iso Rear:rear Closeup_OpticalTerminal:optical-terminal
+tools/usdvenv/bin/python prune_ply.py splat/run/unwana-splat.ply splat/out/unwana-splat.ply 0.02
+tools/usdvenv/bin/python ply2spz.py splat/out/unwana-splat.ply splat/out/unwana-splat.spz --sh 3
+```
+
+The training images (about 200 MB) are not committed; the scripts regenerate them. To keep
+the build time reasonable, one gsplat kernel that this training does not use (the world-space
+3DGUT rasteriser) is compiled for RGB/RGBA only (`gs_setup2.sh`).

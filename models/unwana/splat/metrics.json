@@ -1,0 +1,16 @@
+{
+ "psnr": 26.609902744649244,
+ "ssim": 0.9465558685754475,
+ "test_views": 19,
+ "gaussians_trained": 419554,
+ "train_seconds": 1232,
+ "steps": 30000,
+ "resolution": [
+  1600,
+  900
+ ],
+ "sh_degree": 3,
+ "gaussians_exported": 341029,
+ "train_views": 175,
+ "init_points": 150071
+}

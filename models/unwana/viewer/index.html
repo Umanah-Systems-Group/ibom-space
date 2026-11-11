@@ -23,6 +23,9 @@ canvas { display:block; width:100%; height:100%; touch-action:none; outline:none
 .title b { font-size:17px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; font-stretch:112%; }
 .title span { color:var(--dim); font-size:12px; }
 .tools { display:flex; gap:8px; }
+a.btn { font:inherit; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 12px; text-decoration:none; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+a.btn:hover { border-color:rgba(255,255,255,.3); }
+a.btn:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
 button, select { font:inherit; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 12px; cursor:pointer; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
 button:hover { border-color:rgba(255,255,255,.3); }
 button[aria-pressed="true"] { border-color:var(--gold); color:var(--gold); }
@@ -59,6 +62,7 @@ dt { color:var(--dim); } dd { margin:0; text-align:right; font-variant-numeric:t
 @media (max-width: 820px) {
   .top { flex-direction:column; align-items:center; text-align:center; padding:12px; gap:10px; }
   .title { align-items:center; }
+  .tools { flex-wrap:wrap; justify-content:center; }
   #sheetBtn { display:inline-block; }
   #controls, #inspect { left:8px; right:8px; width:auto; top:auto; bottom:8px; max-height:52%; display:none; }
   body.show-controls #controls { display:block; }
@@ -74,6 +78,7 @@ dt { color:var(--dim); } dd { margin:0; text-align:right; font-variant-numeric:t
 <header class="top">
   <div class="title"><b>Unwana</b><span>Interactive 3D model · concept, provisional dimensions</span></div>
   <div class="tools">
+    <a class="btn" href="splat.html">Gaussian splat</a>
     <button id="sheetBtn" type="button" aria-pressed="false">Controls</button>
     <button id="spinBtn" type="button" aria-pressed="false">Spin</button>
     <button id="resetBtn" type="button">Reset</button>
