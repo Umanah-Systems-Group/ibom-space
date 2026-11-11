@@ -313,3 +313,11 @@ document.querySelectorAll('.scrub').forEach((sec) => {
   } else load();
   addEventListener('scroll', onS, { passive: true }); onS();
 });
+
+/* ------------------------------------------- part cards: show the cutaway on tap */
+document.querySelectorAll('.part-card .cut-btn').forEach((b) => {
+  b.addEventListener('click', () => {
+    const on = b.closest('.part-card').classList.toggle('show-cut');
+    b.setAttribute('aria-pressed', String(on)); b.textContent = on ? 'Outside' : 'See inside';
+  });
+});
