@@ -278,14 +278,38 @@ if (giant) {
    Clips must be encoded all-intra or with a short GOP (ffmpeg -g 4) so seeking is smooth. */
 document.querySelectorAll('.scrub').forEach((sec) => {
   const v = sec.querySelector('.scrub-film');
+  const still = sec.querySelector('.scrub-still');
   const notes = [...sec.querySelectorAll('[data-at]')].map((n) => { const [a, b] = n.dataset.at.split('-').map(Number); return { n, a, b }; });
-  let want = 0, raf = 0;
-  const seek = () => { raf = 0; if (v.readyState >= 1 && v.duration) { const t = want * (v.duration - 0.05); if (Math.abs(v.currentTime - t) > 0.02) v.currentTime = t; } };
+  let want = 0, raf = 0, ready = false;
+  const seek = () => { raf = 0; if (ready && v.duration) { const t = want * (v.duration - 0.05); if (Math.abs(v.currentTime - t) > 0.02) v.currentTime = t; } };
   const onS = () => {
     want = progress(sec);
     notes.forEach(({ n, a, b }) => n.classList.toggle('on', want >= a && want < b));
     if (!raf) raf = requestAnimationFrame(seek);
   };
-  v.addEventListener('loadedmetadata', onS);
+  // The still stays up until the film has really drawn a frame, so a phone that
+  // can't or won't load the clip still shows a picture, never a black box.
+  const show = () => { if (v.readyState >= 2) sec.classList.add('film-live'); };
+  v.addEventListener('seeked', show); v.addEventListener('loadeddata', show);
+  // Load only when the section is near. The whole clip is fetched into memory:
+  // phones (iOS above all) only scrub smoothly through a clip they already hold.
+  const src = (matchMedia('(max-width: 760px)').matches && v.dataset.srcM) || v.dataset.src;
+  const load = () => {
+    if (v.dataset.loading) return; v.dataset.loading = '1';
+    const go = (url) => {
+      v.src = url; v.load();
+      v.addEventListener('loadedmetadata', () => {
+        ready = true;
+        // a muted play/pause wakes the decoder on iOS, so seeks draw frames
+        const p = v.play(); if (p && p.then) p.then(() => { v.pause(); onS(); }).catch(() => onS()); else onS();
+      }, { once: true });
+    };
+    fetch(src).then((r) => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+      .then((b) => go(URL.createObjectURL(b))).catch(() => go(src));
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { io.disconnect(); load(); } }, { rootMargin: '150% 0px' });
+    io.observe(sec);
+  } else load();
   addEventListener('scroll', onS, { passive: true }); onS();
 });
