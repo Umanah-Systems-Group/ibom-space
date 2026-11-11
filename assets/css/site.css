@@ -532,7 +532,7 @@ html { scroll-padding-top: 64px; }
 .k-jobs[data-step='0'] .sc-0, .k-jobs[data-step='1'] .sc-1, .k-jobs[data-step='2'] .sc-2, .k-jobs[data-step='3'] .sc-3 { opacity: 1; }
 .jobs-svg .fade { animation: fadeout 5s linear infinite; }
 @keyframes fadeout { 0%,70% { opacity: 1; } 100% { opacity: 0; } }
-.k-jobs-stage::after { display: none; }
+.k-jobs-film.on { opacity: 1; }
 
 /* software */
 .soft { padding: clamp(120px, 15vw, 210px) var(--m); max-width: calc(var(--max) + 2 * var(--m)); margin: 0 auto; }
@@ -630,3 +630,5 @@ html { scroll-padding-top: 64px; }
   .capture .scrub-notes > div { bottom: 32px; border-left: 0; border-top: 2px solid var(--hi); background: rgba(10,13,18,.7); padding: 16px 18px 18px; }
   .capture .scrub-notes p:not(.n) { font-size: .92rem; }
 }
+.film-head h2 span { color: rgba(238,240,243,.55); }
+@media (max-width: 760px) { .k-jobs-film { object-fit: contain; transform: none; background: #000; } }

@@ -222,7 +222,16 @@ const stepper = (el, n, onStep) => {
 const jobs = document.getElementById('jobs');
 if (jobs) {
   const items = [...jobs.querySelectorAll('.k-jobs-list li')];
-  stepper(jobs, items.length, (i) => items.forEach((li, k) => li.classList.toggle('on', k === i)));
+  const films = [...jobs.querySelectorAll('.k-jobs-film')];
+  let shown = -1;
+  stepper(jobs, items.length, (i) => {
+    items.forEach((li, k) => li.classList.toggle('on', k === i));
+    if (i === shown || !films.length) return; shown = i;
+    films.forEach((v, k) => {
+      if (k === i) { if (v.preload === 'none') { v.preload = 'auto'; v.load(); } v.classList.add('on'); if (!reduced) v.play().catch(() => {}); }
+      else { v.classList.remove('on'); setTimeout(() => { if (!v.classList.contains('on')) v.pause(); }, 1200); }
+    });
+  });
 }
 
 /* cutaway: draw the tug, then light one system at a time */

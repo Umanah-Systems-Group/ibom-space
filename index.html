@@ -46,7 +46,7 @@
     <h1 id="hero-h" class="k-hero-h"><span>Never</span> <span>Stranded</span></h1>
     <div class="k-hero-foot">
       <p>Agbára grabs any satellite by its launch ring and becomes its engine.</p>
-      <a class="k-scroll" href="#cutaway">Scroll <span aria-hidden="true">↓</span></a>
+      <a class="k-scroll" href="#film">Scroll <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
@@ -80,62 +80,29 @@
     </div>
   </section>
 
-  <!-- Agbára cutaway: scroll lights each system in turn -->
-  <section class="cut" id="cutaway" aria-labelledby="cut-h">
-    <div class="cut-pin">
-      <div class="cut-head">
+  <!-- Inside Agbára: a scroll tour of the tug, front panel fading away to show the inside -->
+  <section class="scrub capture tour" id="inside" style="--len: 900vh" aria-labelledby="cut-h">
+    <div class="scrub-pin">
+      <video class="scrub-film" muted playsinline preload="auto" poster="assets/film/agbara-inside.jpg" aria-hidden="true">
+        <source src="assets/film/agbara-inside.mp4" type="video/mp4">
+      </video>
+      <div class="film-shade" aria-hidden="true"></div>
+      <div class="film-head">
         <p class="eyebrow">Inside Agbára</p>
         <h2 id="cut-h">One tug. Six systems.<br><span>Every one designed in Easley.</span></h2>
       </div>
-      <figure class="cut-fig" aria-hidden="true">
-        <svg class="cut-svg" viewBox="0 0 1200 640">
-          <defs>
-            <linearGradient id="plume" x1="1" x2="0" y1="0" y2="0"><stop offset="0" stop-color="#b9a6ff" stop-opacity=".95"/><stop offset=".35" stop-color="#8f7bff" stop-opacity=".55"/><stop offset="1" stop-color="#5b4bff" stop-opacity="0"/></linearGradient>
-            <pattern id="cells" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" fill="none" stroke="currentColor" stroke-width=".8" opacity=".55"/></pattern>
-          </defs>
-          <!-- customer launch ring -->
-          <g class="part p-ring"><ellipse cx="1080" cy="320" rx="34" ry="128" class="ln"/><ellipse cx="1080" cy="320" rx="22" ry="112" class="ln thin"/><path d="M1080 192 L1190 192 M1080 448 L1190 448" class="ln thin dash"/><text x="1112" y="178" class="tag">Customer’s launch ring</text></g>
-          <!-- solar wings -->
-          <g class="part p-wing" data-part="1">
-            <rect x="452" y="24" width="250" height="150" class="ln fillcells"/><rect x="452" y="466" width="250" height="150" class="ln fillcells"/>
-            <path d="M577 174V214 M577 426V466" class="ln"/>
-          </g>
-          <!-- bus -->
-          <g class="part p-bus"><rect x="440" y="214" width="274" height="212" rx="6" class="ln strong"/><path d="M440 250H714 M440 390H714" class="ln thin"/></g>
-          <!-- iodine tank -->
-          <g class="part p-tank" data-part="2"><rect x="470" y="262" width="120" height="116" rx="44" class="ln"/><path d="M485 300h90M485 320h90M485 340h90" class="ln thin dash"/></g>
-          <!-- Jagora computer -->
-          <g class="part p-brain" data-part="5"><rect x="616" y="270" width="74" height="54" rx="3" class="ln"/><path d="M628 284h50M628 297h50M628 310h34" class="ln thin"/><rect x="616" y="334" width="74" height="40" rx="3" class="ln"/></g>
-          <!-- cold gas pods -->
-          <g class="part p-pods" data-part="5"><path d="M440 214l-18-18M714 214l18-18M440 426l-18 18M714 426l18 18" class="ln"/><circle cx="418" cy="192" r="8" class="ln"/><circle cx="736" cy="192" r="8" class="ln"/><circle cx="418" cy="448" r="8" class="ln"/><circle cx="736" cy="448" r="8" class="ln"/></g>
-          <!-- Igwe engine + gimbal + plume -->
-          <g class="part p-engine" data-part="3">
-            <path d="M440 290h-30v60h30" class="ln"/><circle cx="398" cy="320" r="12" class="ln"/>
-            <path d="M386 284 L330 270 L330 370 L386 356 Z" class="ln strong"/><ellipse cx="330" cy="320" rx="10" ry="50" class="ln"/>
-            <path class="plume" d="M326 276 C 230 250, 90 260, 10 320 C 90 380, 230 390, 326 364 Z" fill="url(#plume)"/>
-          </g>
-          <!-- Anya sensors + scan -->
-          <g class="part p-eyes" data-part="4">
-            <rect x="714" y="236" width="40" height="28" rx="3" class="ln"/><circle cx="764" cy="250" r="9" class="ln"/>
-            <rect x="714" y="376" width="40" height="28" rx="3" class="ln"/><circle cx="764" cy="390" r="9" class="ln"/>
-            <path class="scan" d="M773 250 L1060 196 M773 250 L1060 444 M773 390 L1060 196 M773 390 L1060 444"/>
-            <rect class="lock" x="1036" y="180" width="88" height="280"/>
-          </g>
-          <!-- Jide clamp -->
-          <g class="part p-clamp" data-part="0">
-            <path d="M714 300h120 M714 340h120" class="ln"/><path d="M834 280h70l24 18v44l-24 18h-70z" class="ln strong"/>
-            <path class="jaw j1" d="M928 298 L1040 230 L1060 238"/><path class="jaw j2" d="M928 320 L1046 320"/><path class="jaw j3" d="M928 342 L1040 410 L1060 402"/>
-          </g>
-        </svg>
-      </figure>
-      <ol class="cut-list">
-        <li><span class="n">01</span><h3>Jide grabs the ring</h3><p>A three-jaw clamp closes around the launch ring almost every satellite already carries. No changes to the customer’s spacecraft.</p></li>
-        <li><span class="n">02</span><h3>Wings for days of thrust</h3><p>Two solar wings power the engine for the long, quiet burns that move a satellite.</p></li>
-        <li><span class="n">03</span><h3>Solid iodine on board</h3><p>Igwe’s fuel sits in the tank as a solid. It launches unpressurised and can wait fuelled for years.</p></li>
-        <li><span class="n">04</span><h3>Igwe, the engine</h3><p>An electric thruster on a gimbal that steers the push straight through the joined pair.</p></li>
-        <li><span class="n">05</span><h3>Anya, the eyes</h3><p>Lidar and cameras find the ring in sunlight or darkness. Two answers must agree before the tug moves closer.</p></li>
-        <li><span class="n">06</span><h3>Jagora, the brain</h3><p>Guidance on a fault-tolerant two-processor computer that holds, backs off or commits, and small gas pods for the last metres.</p></li>
+      <p class="film-tag">Concept render</p>
+      <ol class="film-chapters" aria-hidden="true">
+        <li data-at="0-0.17">Jide</li><li data-at="0.17-0.34">Wings</li><li data-at="0.34-0.5">Iodine</li><li data-at="0.5-0.67">Igwe</li><li data-at="0.67-0.84">Anya</li><li data-at="0.84-1.01">Jagora</li>
       </ol>
+      <div class="scrub-notes">
+        <div data-at="0.01-0.16"><p class="n">01</p><h3>Jide grabs the ring</h3><p>A three-jaw clamp closes around the launch ring almost every satellite already carries. No changes to the customer’s spacecraft.</p></div>
+        <div data-at="0.18-0.33"><p class="n">02</p><h3>Wings for days of thrust</h3><p>Two solar wings power the engine for the long, quiet burns that move a satellite.</p></div>
+        <div data-at="0.35-0.49"><p class="n">03</p><h3>Solid iodine on board</h3><p>Igwe’s fuel sits in the tank as a solid. It launches unpressurised and can wait fuelled for years.</p></div>
+        <div data-at="0.51-0.66"><p class="n">04</p><h3>Igwe, the engine</h3><p>An electric thruster on a gimbal that steers the push straight through the joined pair.</p></div>
+        <div data-at="0.68-0.83"><p class="n">05</p><h3>Anya, the eyes</h3><p>Lidar and cameras find the ring in sunlight or darkness. Two answers must agree before the tug moves closer.</p></div>
+        <div data-at="0.85-1.01"><p class="n">06</p><h3>Jagora, the brain</h3><p>Guidance on a fault-tolerant two-processor computer that holds, backs off or commits, and small gas pods for the last metres.</p></div>
+      </div>
     </div>
   </section>
 
@@ -144,29 +111,11 @@
     <div class="k-jobs-stage">
       <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
       <h2 class="k-jobs-h" id="jobs-h">One tug<br><span>for four jobs</span></h2>
-      <svg class="jobs-svg" viewBox="-600 -340 1200 680" aria-hidden="true">
-        <path class="planet" d="M-640 330 A 1300 1300 0 0 1 640 330"/>
-        <g class="scene sc-0">
-          <path class="orb" d="M-560 140 A 900 520 0 0 1 560 140"/><path class="orb" d="M-560 -40 A 900 520 0 0 1 560 -40"/>
-          <path id="mv0" class="track-path" d="M-420 82 C -200 -10, -20 -120, 200 -122"/>
-          <g class="pair"><circle r="12" class="sat-c"/><circle r="7" cx="-19" class="sat-t"/><animateMotion dur="5s" repeatCount="indefinite" rotate="auto"><mpath href="#mv0"/></animateMotion></g>
-        </g>
-        <g class="scene sc-1">
-          <path class="orb" d="M-560 -80 A 900 520 0 0 1 560 -80"/>
-          <g class="pair" transform="translate(0 -170)"><circle r="12" class="sat-c"/><circle r="7" cx="-19" class="sat-t"/><path class="puff" d="M-20 0 h-46"/></g>
-          <text class="note" x="0" y="-210" text-anchor="middle">Holding station</text>
-        </g>
-        <g class="scene sc-2">
-          <path class="orb" d="M-560 20 A 900 520 0 0 1 560 20"/>
-          <path id="mv2" class="track-path" d="M-380 -30 C -120 -70, 120 -20, 260 120 S 360 300, 380 330"/>
-          <g class="pair fade"><circle r="12" class="sat-c"/><circle r="7" cx="-19" class="sat-t"/><animateMotion dur="5s" repeatCount="indefinite" rotate="auto"><mpath href="#mv2"/></animateMotion></g>
-        </g>
-        <g class="scene sc-3">
-          <circle r="12" class="sat-c" cy="-60"/>
-          <ellipse class="orb" cx="0" cy="-60" rx="110" ry="60"/>
-          <g><circle r="7" class="sat-t"/><animateMotion dur="6s" repeatCount="indefinite" path="M110 -60 A110 60 0 1 1 -110 -60 A110 60 0 1 1 110 -60"/></g>
-        </g>
-      </svg>
+      <video class="k-jobs-film" muted loop playsinline preload="none" poster="assets/film/job-reloc.jpg" aria-hidden="true"><source src="assets/film/job-reloc.mp4" type="video/mp4"></video>
+      <video class="k-jobs-film" muted loop playsinline preload="none" poster="assets/film/job-life.jpg" aria-hidden="true"><source src="assets/film/job-life.mp4" type="video/mp4"></video>
+      <video class="k-jobs-film" muted loop playsinline preload="none" poster="assets/film/job-dispose.jpg" aria-hidden="true"><source src="assets/film/job-dispose.mp4" type="video/mp4"></video>
+      <video class="k-jobs-film" muted loop playsinline preload="none" poster="assets/film/job-inspect.jpg" aria-hidden="true"><source src="assets/film/job-inspect.mp4" type="video/mp4"></video>
+      <p class="credit k-jobs-credit">Concept render</p>
       <ol class="k-jobs-list">
         <li><span class="n">01</span><h3>Relocation</h3><p>Raise, lower or move a satellite to a new slot, even one never designed to move.</p></li>
         <li><span class="n">02</span><h3>Life extension</h3><p>Stay attached and keep the satellite on station after its own fuel runs out.</p></li>
