@@ -68,7 +68,11 @@ Cycles PBR, all procedural:
 
 - Brushed aluminium: anisotropic, brushing direction varied per plate, tone variation per
   plate, edge wear, fine scratches.
-- Gold Kapton MLI: geometric pillowing and fold creases, faceted crease normals, colour variation.
+- Gold Kapton MLI: real displaced geometry at 2.5 mm quads. Four octaves of ridged, elongated
+  crease noise (creases a few mm deep, 1–4 cm apart), long diagonal slack folds, a pillow
+  bulge, wrinkles gathered at each tie-down and along the taped edges, and edges tucked under.
+  A fine bump adds micro-wrinkle. Gold (1.0, 0.72, 0.24), roughness 0.10–0.18. Tape seams are
+  slightly rougher, with tie-down buttons and screws.
 - Solar cells: triple-junction cells with cropped corners, cover-glass coat, finger lines,
   busbars, silver interconnects.
 - Coated optical glass: violet on the terminal objective, green on the imager lenses, with inner
@@ -78,7 +82,7 @@ Cycles PBR, all procedural:
 
 For the GLB and USDZ, the materials are converted to standard glTF metal/roughness. Small
 tileable textures are generated for brushed metal, MLI and cells. The MLI creases, cells,
-busbars and fasteners are real geometry, so they carry over. The faceted crease shading,
+busbars and fasteners are real geometry, so they carry over. The micro-wrinkle bump,
 edge wear and glass coatings are Cycles-only, so the web and Quick Look versions look simpler
 than the renders.
 
@@ -86,7 +90,9 @@ than the renders.
 
 A dark grey seamless sweep and the Poly Haven `studio_small_09` HDRI (CC0, low strength),
 plus six area lights: off-axis key, fill, two rim strips, top, and a floor bounce hidden
-from reflections. A soft front scrim lights the gold. The backdrop and lights sit on
+from reflections. A soft front scrim and five large bounce cards
+(hidden from the camera, light-linked to the MLI collection only) give the gold foil bright
+things to reflect from every camera without washing out the solar cells. The backdrop and lights sit on
 `Studio_Rig`, which the render script turns to face each camera, as on a product set. For the
 underside view it is flipped and the floor hidden. View transform: AgX, Medium High Contrast,
 exposure -0.25.
@@ -122,8 +128,8 @@ Animate the deployment with the `Hinge_L_A/B` and `Hinge_R_A/B` empties (Z rotat
 
 | Output | Settings | Time per image |
 | --- | --- | --- |
-| 10 views | 3840x2160, 200 samples, adaptive, OIDN | 228–323 s (Bottom: 53 s, no floor) |
-| Close-ups | 2560x1440, 256 samples, f/2.8–3.2 | 131–435 s |
+| 10 views | 3840x2160, 200 samples, adaptive, OIDN | 288–438 s (Bottom: 70 s, no floor) |
+| Close-ups | 2560x1440, 256 samples, f/2.8–3.2 | 132–437 s |
 | Preview | 1920x1080, 128 samples | about 60 s |
 
 The close-up files are `closeup-optical-terminal`, `closeup-mli-seam`, `closeup-nozzle`,
@@ -131,8 +137,6 @@ The close-up files are `closeup-optical-terminal`, `closeup-mli-seam`, `closeup-
 
 ## Known limits
 
-- Head-on, the front MLI mirrors the dark backdrop, so it reads darker and more amber than the
-  bright yellow foil in the reference. The isometric views and close-ups show it brighter.
 - The left and right views show each wing edge-on, as a thin line through the middle of the
   side. The reference side views omit the wings.
 - The USDZ is static (deployed). The deploy animation is only in the GLB and the .blend. I have

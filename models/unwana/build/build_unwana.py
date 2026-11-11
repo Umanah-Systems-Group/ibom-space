@@ -191,36 +191,29 @@ def mat_gold_mli(name, color=(1.0, 0.60, 0.16)):
     n.inputs["Scale"].default_value = 9; n.inputs["Detail"].default_value = 6
     nt.links.new(tc.outputs["Object"], n.inputs["Vector"])
     ramp = nt.nodes.new("ShaderNodeValToRGB"); ramp.location = (-250, 200)
-    ramp.color_ramp.elements[0].color = (1.0, 0.64, 0.17, 1)
-    ramp.color_ramp.elements[1].color = (1.0, 0.78, 0.32, 1)
+    ramp.color_ramp.elements[0].color = (1.0, 0.66, 0.18, 1)
+    ramp.color_ramp.elements[1].color = (1.0, 0.78, 0.30, 1)
     ramp.color_ramp.elements[0].position = 0.3; ramp.color_ramp.elements[1].position = 0.75
     nt.links.new(n.outputs["Fac"], ramp.inputs[0])
     nt.links.new(ramp.outputs[0], bsdf.inputs["Base Color"])
     bsdf.inputs["Metallic"].default_value = 1.0
-    r_out, _ = wear_roughness(nt, 0.07, 0.08, 25)
+    r_out, _ = wear_roughness(nt, 0.10, 0.08, 25)
     nt.links.new(r_out, bsdf.inputs["Roughness"])
-    # crumpled-film facets: each Voronoi cell gets its own flat tilt (two scales), so
-    # highlights break into angular shards with straight crease lines between them
-    geo = nt.nodes.new("ShaderNodeNewGeometry"); geo.location = (-500, -900)
-    acc = geo.outputs["Normal"]
-    for k, (scale, tilt) in enumerate(((24.0, 0.22), (75.0, 0.07))):
-        v = nt.nodes.new("ShaderNodeTexVoronoi"); v.location = (-500, -500 - 200 * k)
-        v.feature = 'F1'; v.inputs["Scale"].default_value = scale
-        v.inputs["Randomness"].default_value = 1.0
-        nt.links.new(tc.outputs["Object"], v.inputs["Vector"])
-        sub = nt.nodes.new("ShaderNodeVectorMath"); sub.operation = 'SUBTRACT'; sub.location = (-300, -500 - 200 * k)
-        sub.inputs[1].default_value = (0.5, 0.5, 0.5)
-        nt.links.new(v.outputs["Color"], sub.inputs[0])
-        sc = nt.nodes.new("ShaderNodeVectorMath"); sc.operation = 'SCALE'; sc.location = (-100, -500 - 200 * k)
-        sc.inputs["Scale"].default_value = tilt
-        nt.links.new(sub.outputs[0], sc.inputs[0])
-        add = nt.nodes.new("ShaderNodeVectorMath"); add.operation = 'ADD'; add.location = (100, -500 - 200 * k)
-        nt.links.new(acc, add.inputs[0]); nt.links.new(sc.outputs[0], add.inputs[1])
-        acc = add.outputs[0]
-    nrm = nt.nodes.new("ShaderNodeVectorMath"); nrm.operation = 'NORMALIZE'; nrm.location = (300, -600)
-    nt.links.new(acc, nrm.inputs[0])
-    nt.links.new(nrm.outputs[0], bsdf.inputs["Normal"])
-    mat["gltf"] = dict(color=color, metallic=1.0, roughness=0.16, tex="mli")
+    # micro-wrinkle: fine ridged noise and film creases as bump on top of the displaced geometry
+    mw = nt.nodes.new("ShaderNodeTexNoise"); mw.location = (-500, -500)
+    mw.inputs["Scale"].default_value = 420; mw.inputs["Detail"].default_value = 3
+    nt.links.new(tc.outputs["Object"], mw.inputs["Vector"])
+    vo = nt.nodes.new("ShaderNodeTexVoronoi"); vo.location = (-500, -750)
+    vo.feature = 'DISTANCE_TO_EDGE'; vo.inputs["Scale"].default_value = 160
+    nt.links.new(tc.outputs["Object"], vo.inputs["Vector"])
+    b1 = nt.nodes.new("ShaderNodeBump"); b1.location = (0, -500)
+    b1.inputs["Strength"].default_value = 0.10; b1.inputs["Distance"].default_value = 0.0002
+    nt.links.new(mw.outputs["Fac"], b1.inputs["Height"])
+    b2 = nt.nodes.new("ShaderNodeBump"); b2.location = (250, -650)
+    b2.inputs["Strength"].default_value = 0.06; b2.inputs["Distance"].default_value = 0.0002
+    nt.links.new(vo.outputs["Distance"], b2.inputs["Height"]); nt.links.new(b1.outputs[0], b2.inputs["Normal"])
+    nt.links.new(b2.outputs[0], bsdf.inputs["Normal"])
+    mat["gltf"] = dict(color=(1.0, 0.76, 0.33), metallic=1.0, roughness=0.14, tex="mli")
     return mat
 
 def mat_glass(name, film_nm=320.0, film_ior=1.38, tint=(1, 1, 1), spec_tint=None):
@@ -291,7 +284,7 @@ MATS["radiator"] = mat_simple("Radiator_BlackPaint", (0.012, 0.012, 0.013), 0.0,
 MATS["gold_anod"] = mat_simple("Gold_Anodised", (0.95, 0.62, 0.20), 1.0, 0.28, wear=0.12)
 MATS["gold"] = mat_simple("Gold_Plated", (1.0, 0.70, 0.28), 1.0, 0.14, wear=0.08)
 MATS["mli"] = mat_gold_mli("Kapton_MLI_Gold")
-MATS["mli_tape"] = mat_simple("Kapton_Tape", (1.0, 0.66, 0.2), 1.0, 0.16, wear=0.08)
+MATS["mli_tape"] = mat_simple("Kapton_Tape", (1.0, 0.70, 0.26), 1.0, 0.28, wear=0.08)
 MATS["stainless"] = mat_simple("Stainless_Steel", (0.62, 0.62, 0.62), 1.0, 0.20, wear=0.12)
 MATS["black_oxide"] = mat_simple("Steel_BlackOxide", (0.03, 0.03, 0.03), 1.0, 0.35)
 MATS["solar"] = mat_solar("PV_Cell_TripleJunction")
@@ -592,23 +585,54 @@ for f in FACES:
     base_panel(f)
 
 # ================================================================ MLI blankets
-def mli_blanket(name, face, u0, u1, v0, v1, d=0.0, puff=0.008, res=0.0024, seed=0, tape=True):
+def mli_blanket(name, face, u0, u1, v0, v1, d=0.0, puff=0.007, res=0.0025, seed=0, tape=True):
     _, U, V, N, _, _ = FACES[face]
     w, h = u1 - u0, v1 - v0
     nu, nv = max(8, int(w / res)), max(8, int(h / res))
     us = np.linspace(0, 1, nu + 1); vs = np.linspace(0, 1, nv + 1)
     uu, vv = np.meshgrid(us, vs, indexing='ij')
-    # quilted pillow: puffs toward the middle, tied down at the edges
-    edge = np.minimum(np.minimum(uu, 1 - uu) * w, np.minimum(vv, 1 - vv) * h)
-    pil = np.clip(edge / 0.03, 0, 1) ** 0.6
+    U_m = uu * w; V_m = vv * h                       # metres across the blanket
+    # quilted pillow: puffs toward the middle, held down at the edges, tucked under at the rim
+    edge = np.minimum(np.minimum(U_m, w - U_m), np.minimum(V_m, h - V_m))
+    pil = np.clip(edge / 0.035, 0, 1) ** 0.7
     rng = np.random.default_rng(seed)
-    # large slack folds from a sum of random oriented waves (cloth-like creases)
+
+    def ridged(scale, amp, aniso=2.5):
+        """Ridged noise: band-limited random field n, crease = 1-|n| (sharp crest lines, soft valleys)."""
+        g = rng.standard_normal(uu.shape)
+        ku = np.fft.fftfreq(uu.shape[0], d=res)[:, None]; kv = np.fft.fftfreq(uu.shape[1], d=res)[None, :]
+        ang = rng.uniform(0, math.pi)
+        ka = ku * math.cos(ang) + kv * math.sin(ang); kb = -ku * math.sin(ang) + kv * math.cos(ang)
+        sa, sb = scale, scale / aniso                  # elongated wrinkles, random direction
+        filt = np.exp(-2 * (math.pi ** 2) * ((ka * sa) ** 2 + (kb * sb) ** 2) / 4)
+        n = np.real(np.fft.ifft2(np.fft.fft2(g) * filt))
+        n /= max(n.std(), 1e-9)
+        r = np.clip(1.0 - np.abs(n), 0, 1) ** 2.2
+        return (r - r.mean()) * amp
+
+    crease = ridged(0.040, 0.0042) + ridged(0.022, 0.0024) + ridged(0.011, 0.0011, 1.6) + ridged(0.006, 0.0004, 1.3)
+    # a few long diagonal slack folds
     folds = np.zeros_like(uu)
-    for _ in range(9):
-        ang = rng.uniform(0, math.pi); k = rng.uniform(18, 60); ph = rng.uniform(0, 6.3)
-        folds += np.abs(np.sin((uu * w * math.cos(ang) + vv * h * math.sin(ang)) * k + ph)) * rng.uniform(0.3, 1.0)
-    folds = (folds / 9.0 - 0.35) * 0.006
-    dz = d + 0.0015 + pil * (puff + folds)
+    for _ in range(3):
+        ang = rng.uniform(0.3, 1.3) * rng.choice([-1, 1]); k = rng.uniform(25, 45); ph = rng.uniform(0, 6.3)
+        t = U_m * math.cos(ang) + V_m * math.sin(ang)
+        folds += (1 - np.abs(np.sin(t * k + ph))) ** 3 * rng.uniform(0.0015, 0.003)
+    # wrinkles gathering at each tie-down and running perpendicular to the taped edges
+    gather = np.zeros_like(uu)
+    tie = []
+    a0, a1, b0, b1 = 0.005, w - 0.005, 0.005, h - 0.005
+    nu_t = max(1, int(round((a1 - a0) / 0.06))); nv_t = max(1, int(round((b1 - b0) / 0.06)))
+    for i in range(nu_t + 1):
+        tie += [(a0 + (a1 - a0) * i / nu_t, b0), (a0 + (a1 - a0) * i / nu_t, b1)]
+    for j in range(1, nv_t):
+        tie += [(a0, b0 + (b1 - b0) * j / nv_t), (a1, b0 + (b1 - b0) * j / nv_t)]
+    for (tu, tv) in tie:
+        du, dv = U_m - tu, V_m - tv
+        rr = np.hypot(du, dv); th = np.arctan2(dv, du)
+        nspk = rng.integers(5, 9)
+        gather += np.abs(np.sin(th * nspk + rng.uniform(0, 6.3))) * np.exp(-rr / 0.016) * 0.0016
+    seam = np.exp(-edge / 0.008) * (1 - np.abs(np.sin((U_m + V_m) * 140 + seed))) * 0.0012
+    dz = d + 0.0012 + pil * (puff + crease + folds) + gather * np.clip(edge / 0.012, 0, 1) + seam - (1 - np.clip(edge / 0.004, 0, 1)) * 0.0025
     o = np.asarray(FP(face, 0, 0, 0))
     P = (o[None, None, :] + np.asarray(U)[None, None, :] * (u0 + uu * w)[..., None]
          + np.asarray(V)[None, None, :] * (v0 + vv * h)[..., None]
@@ -628,21 +652,6 @@ def mli_blanket(name, face, u0, u1, v0, v1, d=0.0, puff=0.008, res=0.0024, seed=
     me.materials.append(MATS["mli"])
     box_uv(me)
     me.shade_smooth()
-    vg = ob.vertex_groups.new(name="crinkle")
-    wts = pil.ravel()
-    vg.add(list(range(len(wts))), 1.0, 'REPLACE')
-    for i, wv in enumerate(wts):
-        if wv < 0.999:
-            vg.add([i], float(wv), 'REPLACE')
-    # crinkle: Clouds with Voronoi F2-F1 basis, small strength (reads as film, not rock)
-    t1 = bpy.data.textures.new(name + "_crinkle", 'CLOUDS')
-    t1.noise_basis = 'VORONOI_F2_F1'; t1.noise_scale = 0.022; t1.noise_depth = 1
-    m1 = ob.modifiers.new("Crinkle", 'DISPLACE'); m1.texture = t1; m1.strength = 0.0009
-    m1.mid_level = 0.5; m1.texture_coords = 'LOCAL'; m1.vertex_group = "crinkle"
-    t2 = bpy.data.textures.new(name + "_fine", 'CLOUDS')
-    t2.noise_basis = 'VORONOI_F2_F1'; t2.noise_scale = 0.008
-    m2 = ob.modifiers.new("CrinkleFine", 'DISPLACE'); m2.texture = t2; m2.strength = 0.0002
-    m2.texture_coords = 'LOCAL'; m2.vertex_group = "crinkle"
     ob.parent = root
     if tape:
         tb = MB()
@@ -651,7 +660,16 @@ def mli_blanket(name, face, u0, u1, v0, v1, d=0.0, puff=0.008, res=0.0024, seed=
             face_box(tb, face, a0, a1, b0, b1, d + 0.0008, d + 0.0022, "mli_tape")
         tb.build(name + "_EdgeTape", COLL["MLI"], root, bevel=0.0004)
         # tie-down buttons (polymer button + stainless washer) along the perimeter
-        screw_rect("MLI_TieDowns", face, u0, u1, v0, v1, d + 0.0022, step=0.06, inset=0.005, r=0.0026)
+        screw_rect("MLI_TieDowns", face, u0, u1, v0, v1, d + 0.0052, step=0.06, inset=0.005, r=0.0022)
+        btn = MB()
+        a0, a1, b0, b1 = u0 + 0.005, u1 - 0.005, v0 + 0.005, v1 - 0.005
+        nu_t = max(1, int(round((a1 - a0) / 0.06))); nv_t = max(1, int(round((b1 - b0) / 0.06)))
+        spots = [(a0 + (a1 - a0) * i / nu_t, b) for i in range(nu_t + 1) for b in (b0, b1)]
+        spots += [(a, b0 + (b1 - b0) * j / nv_t) for j in range(1, nv_t) for a in (a0, a1)]
+        for (bu, bv) in spots:
+            btn.lathe([(0, 0.0030), (0.0050, 0.0030), (0.0056, 0.0024), (0.0056, 0.0), (0, 0.0)], 20,
+                      FM(face, bu, bv, d + 0.0022), "mli_tape")
+        btn.build(name + "_TieDownButtons", COLL["MLI"], root)
     return ob
 
 # ================================================================ FRONT face
@@ -1262,6 +1280,15 @@ def build_studio():
     fb.visible_glossy = False
     sc = area("Scrim_Front", (1.6, -4.6, 2.2), tgt, 2.5, 150, size_y=1.5)
     sc.visible_camera = False
+    for nm, loc, sz, szy, pw in (("Card_Front", (0.3, -4.2, 1.4), 4.0, 2.6, 850), ("Card_Top", (0.0, 0.0, 3.4), 3.0, 3.0, 750),
+                                 ("Card_Left", (-3.8, -0.8, 1.3), 2.6, 2.4, 750), ("Card_Right", (3.8, -0.8, 1.3), 2.6, 2.4, 750),
+                                 ("Card_Back", (0.0, 3.8, 1.6), 3.0, 2.4, 450)):
+        cd_ = area(nm, loc, tgt, sz, pw, size_y=szy)
+        cd_.visible_camera = False
+        try:
+            cd_.light_linking.receiver_collection = COLL["MLI"]
+        except AttributeError:
+            pass
 
 build_studio()
 
