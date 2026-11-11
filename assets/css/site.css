@@ -720,3 +720,7 @@ html { scroll-padding-top: 64px; }
 @media (hover: hover) { .part-card:hover .cut { opacity: 1; } }
 .cut-btn { position: absolute; top: 14px; right: 14px; z-index: 2; padding: 7px 13px; border-radius: 99px; border: 1px solid rgba(238,240,243,.3); background: rgba(5,7,10,.6); color: var(--ink); font: inherit; font-size: .82rem; cursor: pointer; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .part-card.show-cut .cut-btn, .cut-btn:hover { background: rgba(168,145,255,.3); }
+
+/* Nyoka and Mafuta at work */
+.at-work { border-top: 1px solid var(--line); }
+.at-work video { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
