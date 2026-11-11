@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unwana 3D viewer · Ibom Space</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05070a">
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/" } }
+</script>
+<style>
+@font-face { font-family: 'Archivo'; src: url('../../../assets/fonts/archivo.woff2') format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+:root { --bg:#05070a; --panel:rgba(12,15,20,.86); --line:rgba(255,255,255,.1); --ink:#eef1f5; --dim:#9aa3af; --gold:#e8a53a; }
+* { box-sizing: border-box; }
+html, body { margin:0; height:100%; background:var(--bg); color:var(--ink); font-family:'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size:14px; overflow:hidden; }
+#stage { position:fixed; inset:0; }
+canvas { display:block; width:100%; height:100%; touch-action:none; outline:none; }
+.top { position:fixed; left:0; right:0; top:0; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 18px; pointer-events:none; z-index:3; }
+.top > * { pointer-events:auto; }
+.title { display:flex; flex-direction:column; gap:2px; }
+.title b { font-size:17px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; font-stretch:112%; }
+.title span { color:var(--dim); font-size:12px; }
+.tools { display:flex; gap:8px; }
+button, select { font:inherit; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 12px; cursor:pointer; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+button:hover { border-color:rgba(255,255,255,.3); }
+button[aria-pressed="true"] { border-color:var(--gold); color:var(--gold); }
+button:focus-visible, select:focus-visible, input:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+.panel { position:fixed; z-index:2; background:var(--panel); border:1px solid var(--line); border-radius:12px; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+#controls { left:18px; top:76px; width:270px; max-height:calc(100% - 96px); overflow:auto; padding:14px; }
+#inspect { right:18px; top:76px; width:280px; max-height:calc(100% - 96px); overflow:auto; padding:14px; }
+h2 { margin:0 0 8px; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); font-weight:600; }
+section + section { margin-top:16px; padding-top:14px; border-top:1px solid var(--line); }
+.presets { display:grid; grid-template-columns:repeat(2, 1fr); gap:6px; }
+.presets button { padding:7px 4px; font-size:12px; }
+label.row { display:grid; grid-template-columns:86px 1fr 34px; align-items:center; gap:8px; margin:7px 0; color:var(--dim); font-size:12px; }
+label.row output { color:var(--ink); text-align:right; font-variant-numeric:tabular-nums; }
+input[type=range] { width:100%; accent-color:var(--gold); }
+.chk { display:flex; align-items:center; gap:8px; margin:7px 0; font-size:13px; }
+.chk input { accent-color:var(--gold); width:16px; height:16px; }
+#parts { list-style:none; margin:0; padding:0; max-height:210px; overflow:auto; }
+#parts li button { width:100%; text-align:left; background:none; border:0; border-radius:6px; padding:6px 8px; display:flex; justify-content:space-between; gap:8px; }
+#parts li button:hover { background:rgba(255,255,255,.06); }
+#parts li button.on { background:rgba(232,165,58,.16); color:var(--gold); }
+#parts small { color:var(--dim); }
+dl { display:grid; grid-template-columns:auto 1fr; gap:5px 12px; margin:0; font-size:13px; }
+dt { color:var(--dim); } dd { margin:0; text-align:right; font-variant-numeric:tabular-nums; }
+.mat { border:1px solid var(--line); border-radius:8px; padding:10px; margin-top:8px; }
+.mat h3 { margin:0 0 8px; font-size:13px; display:flex; align-items:center; gap:8px; }
+.sw { width:16px; height:16px; border-radius:4px; border:1px solid rgba(255,255,255,.3); flex:none; }
+.bar { height:5px; border-radius:3px; background:rgba(255,255,255,.12); overflow:hidden; margin-top:3px; }
+.bar i { display:block; height:100%; background:var(--gold); }
+.hint { color:var(--dim); font-size:12px; line-height:1.45; }
+#status { position:fixed; inset:0; display:grid; place-items:center; text-align:center; padding:24px; z-index:1; pointer-events:none; color:var(--dim); }
+#status b { display:block; color:var(--ink); font-size:16px; margin-bottom:6px; }
+.note { position:fixed; left:0; right:0; bottom:10px; text-align:center; color:var(--dim); font-size:11px; z-index:1; pointer-events:none; padding:0 12px; }
+#sheetBtn { display:none; }
+@media (max-width: 820px) {
+  .top { flex-direction:column; align-items:center; text-align:center; padding:12px; gap:10px; }
+  .title { align-items:center; }
+  #sheetBtn { display:inline-block; }
+  #controls, #inspect { left:8px; right:8px; width:auto; top:auto; bottom:8px; max-height:52%; display:none; }
+  body.show-controls #controls { display:block; }
+  body.show-inspect #inspect { display:block; }
+  h2, #inspectBody > div > p:first-child { text-align:center; }
+  .note { display:none; }
+}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="c" tabindex="0" aria-label="Interactive 3D model of the Unwana spacecraft. Drag to rotate, scroll or pinch to zoom, right-drag or two-finger drag to pan."></canvas></div>
+
+<header class="top">
+  <div class="title"><b>Unwana</b><span>Interactive 3D model · concept, provisional dimensions</span></div>
+  <div class="tools">
+    <button id="sheetBtn" type="button" aria-pressed="false">Controls</button>
+    <button id="spinBtn" type="button" aria-pressed="false">Spin</button>
+    <button id="resetBtn" type="button">Reset</button>
+    <button id="fsBtn" type="button">Fullscreen</button>
+  </div>
+</header>
+
+<aside class="panel" id="controls" aria-label="Viewer controls">
+  <section>
+    <h2>Camera</h2>
+    <div class="presets" id="presets"></div>
+  </section>
+  <section>
+    <h2>Exploded view</h2>
+    <label class="row">Separation <input id="explode" type="range" min="0" max="1" step="0.01" value="0"><output id="explodeOut">0%</output></label>
+  </section>
+  <section id="deploySec" hidden>
+    <h2>Solar panels</h2>
+    <label class="row">Deployment <input id="deploy" type="range" min="0" max="1" step="0.005" value="1"><output id="deployOut">100%</output></label>
+    <button id="deployPlay" type="button">Play deployment</button>
+  </section>
+  <section>
+    <h2>Lighting</h2>
+    <label class="row">Exposure <input id="exposure" type="range" min="0.2" max="2.5" step="0.01" value="1"><output id="exposureOut">1.0</output></label>
+    <label class="row">Studio fill <input id="env" type="range" min="0" max="2.5" step="0.01" value="1"><output id="envOut">1.0</output></label>
+    <label class="row">Key light <input id="key" type="range" min="0" max="8" step="0.05" value="3"><output id="keyOut">3.0</output></label>
+    <label class="row">Key angle <input id="keyAz" type="range" min="-180" max="180" step="1" value="-40"><output id="keyAzOut">-40</output></label>
+    <label class="chk"><input id="shadows" type="checkbox" checked> Floor shadow</label>
+  </section>
+  <section>
+    <h2>Components</h2>
+    <ul id="parts"></ul>
+    <label class="chk"><input id="isolate" type="checkbox"> Show only the selected component</label>
+  </section>
+</aside>
+
+<aside class="panel" id="inspect" aria-label="Component and material inspector" aria-live="polite">
+  <h2>Inspector</h2>
+  <div id="inspectBody"><p class="hint">Click or tap any part of the spacecraft to see what it is and what it is made of.</p></div>
+</aside>
+
+<div id="status"><div><b>Loading the model</b><span id="statusText">0%</span></div></div>
+<p class="note">Concept model. Dimensions are provisional and not engineering data.</p>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const MODEL = params.get('model') || '../unwana.glb';
+
+const canvas = $('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: params.has('shot') });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b0d11);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
+
+const camera = new THREE.PerspectiveCamera(32, 1, 0.01, 200);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true; controls.dampingFactor = 0.08;
+controls.autoRotateSpeed = 1.2;
+
+const key = new THREE.DirectionalLight(0xfff4e6, 3);
+key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.01;
+scene.add(key, key.target);
+const rim = new THREE.DirectionalLight(0xcfe0ff, 1.2); scene.add(rim, rim.target);
+
+const floor = new THREE.Mesh(new THREE.CircleGeometry(1, 96), new THREE.ShadowMaterial({ opacity: 0.45 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+let root = null, radius = 1, center = new THREE.Vector3(), mixer = null, clipDur = 0, deployT = 1, playing = false;
+let parts = [], selected = null;
+const outline = new THREE.Box3Helper(new THREE.Box3(), 0xe8a53a); outline.visible = false; scene.add(outline);
+
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize); resize();
+
+// ---------- camera presets (az: degrees round the vertical axis from the front, el: elevation)
+const PRESETS = [
+  ['Front', 0, 0], ['Rear', 180, 0], ['Left', -90, 0], ['Right', 90, 0], ['Top', 0, 89.9], ['Bottom', 0, -89.9],
+  ['Front left', -40, 24], ['Front right', 40, 24], ['Rear left', -140, 24], ['Rear right', 140, 24],
+];
+let fly = null;
+function presetPos(az, el) {
+  const a = THREE.MathUtils.degToRad(az), e = THREE.MathUtils.degToRad(el);
+  const fit = radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) * (camera.aspect < 1 ? 1 / camera.aspect : 1) * 1.05;
+  return new THREE.Vector3(Math.sin(a) * Math.cos(e), Math.sin(e), Math.cos(a) * Math.cos(e)).multiplyScalar(fit).add(center);
+}
+function goTo(az, el, instant) {
+  const to = presetPos(az, el);
+  if (instant) { camera.position.copy(to); controls.target.copy(center); controls.update(); return; }
+  fly = { from: camera.position.clone(), to, t0: performance.now(), tf: controls.target.clone() };
+}
+PRESETS.forEach(([name, az, el]) => {
+  const b = document.createElement('button'); b.type = 'button'; b.textContent = name;
+  b.onclick = () => goTo(az, el); $('presets').append(b);
+});
+
+// ---------- load
+function pretty(n) { return (n || 'Part').replace(/[_.]+/g, ' ').replace(/\s\d{3}$/, '').replace(/([a-z])([A-Z])/g, '$1 $2').trim(); }
+
+new GLTFLoader().load(MODEL, (gltf) => {
+  root = gltf.scene; scene.add(root);
+  root.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  root.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(root);
+  // stand the model on the floor, centred
+  root.position.x -= (box.min.x + box.max.x) / 2; root.position.z -= (box.min.z + box.max.z) / 2; root.position.y -= box.min.y;
+  root.updateMatrixWorld(true);
+  box.setFromObject(root); box.getCenter(center); radius = box.getSize(new THREE.Vector3()).length() / 2;
+  floor.scale.setScalar(radius * 3);
+  camera.near = radius / 200; camera.far = radius * 60; camera.updateProjectionMatrix();
+  controls.minDistance = radius * 0.15; controls.maxDistance = radius * 12;
+
+  // components: walk down while there is a single child, then take that level
+  let level = root;
+  while (level.children.length === 1 && !level.children[0].isMesh) level = level.children[0];
+  let groups = level.children.filter((c) => { let m = false; c.traverse((o) => { if (o.isMesh) m = true; }); return m; });
+  parts = groups.map((obj) => {
+    const b = new THREE.Box3().setFromObject(obj), c = b.getCenter(new THREE.Vector3());
+    let tris = 0, meshes = 0; const mats = new Set();
+    obj.traverse((o) => { if (o.isMesh) { meshes++; const g = o.geometry; tris += (g.index ? g.index.count : g.attributes.position.count) / 3; [].concat(o.material).forEach((m) => mats.add(m)); } });
+    return { obj, name: pretty(obj.name), base: obj.position.clone(), dir: c.clone().sub(center), size: b.getSize(new THREE.Vector3()), tris, meshes, mats: [...mats] };
+  }).sort((a, b) => a.name.localeCompare(b.name));
+  const ul = $('parts');
+  parts.forEach((p, i) => {
+    const li = document.createElement('li'), b = document.createElement('button'); b.type = 'button';
+    b.innerHTML = `<span></span><small></small>`; b.firstChild.textContent = p.name; b.lastChild.textContent = p.meshes > 1 ? p.meshes + ' pieces' : '';
+    b.onclick = () => select(selected === p ? null : p); p.btn = b; li.append(b); ul.append(li);
+  });
+
+  if (gltf.animations.length) {
+    mixer = new THREE.AnimationMixer(root);
+    gltf.animations.forEach((clip) => { mixer.clipAction(clip).play(); clipDur = Math.max(clipDur, clip.duration); });
+    $('deploySec').hidden = false;
+  }
+  placeLights(); goTo(-40, 24, true);
+  $('status').hidden = true; $('status').style.display = 'none';
+  window.__ready = true;
+}, (e) => { if (e.total) $('statusText').textContent = Math.round(100 * e.loaded / e.total) + '%'; },
+(err) => { $('status').firstElementChild.innerHTML = '<b>The model could not be loaded</b><span>Check that unwana.glb sits next to this viewer, then reload.</span>'; console.error(err); });
+
+// ---------- lighting
+function placeLights() {
+  const a = THREE.MathUtils.degToRad(+$('keyAz').value), d = radius * 4;
+  key.position.set(center.x + Math.sin(a) * d, center.y + d * 0.9, center.z + Math.cos(a) * d); key.target.position.copy(center);
+  rim.position.set(center.x - Math.sin(a) * d, center.y + d * 0.4, center.z - Math.cos(a) * d); rim.target.position.copy(center);
+  const s = key.shadow.camera; s.left = s.bottom = -radius * 1.6; s.right = s.top = radius * 1.6; s.near = radius; s.far = d * 2.5; s.updateProjectionMatrix();
+}
+function bind(id, fn, fmt = (v) => (+v).toFixed(1)) {
+  const el = $(id), out = $(id + 'Out'); const run = () => { out.textContent = fmt(el.value); fn(+el.value); }; el.addEventListener('input', run); run();
+}
+bind('exposure', (v) => { renderer.toneMappingExposure = v; });
+bind('env', (v) => { scene.environmentIntensity = v; });
+bind('key', (v) => { key.intensity = v; rim.intensity = v * 0.4; });
+bind('keyAz', () => placeLights(), (v) => v);
+$('shadows').onchange = (e) => { floor.visible = e.target.checked; };
+
+// ---------- explode + deployment
+let explode = 0;
+bind('explode', (v) => { explode = v; }, (v) => Math.round(v * 100) + '%');
+bind('deploy', (v) => { deployT = v; playing = false; }, (v) => Math.round(v * 100) + '%');
+$('deployPlay').onclick = () => { deployT = 0; playing = true; };
+
+const tmpM = new THREE.Matrix4(), tmpV = new THREE.Vector3();
+function applyPose(dt) {
+  if (!root) return;
+  for (const p of parts) p.obj.position.copy(p.base);
+  if (mixer) {
+    if (playing) { deployT = Math.min(1, deployT + dt / Math.max(clipDur, 0.001)); $('deploy').value = deployT; $('deployOut').textContent = Math.round(deployT * 100) + '%'; if (deployT >= 1) playing = false; }
+    mixer.setTime(Math.min(deployT * clipDur, clipDur - 1e-4));
+  }
+  if (explode > 0) for (const p of parts) {
+    tmpV.copy(p.dir).multiplyScalar(explode * 1.4);
+    if (tmpV.lengthSq() < 1e-8) continue;
+    tmpM.copy(p.obj.parent.matrixWorld).invert(); tmpV.transformDirection(tmpM).multiplyScalar(p.dir.length() * explode * 1.4 / Math.max(p.obj.parent.getWorldScale(new THREE.Vector3()).x, 1e-6));
+    p.obj.position.add(tmpV);
+  }
+  if (selected) { root.updateMatrixWorld(true); outline.box.setFromObject(selected.obj); }
+}
+
+// ---------- selection + inspector
+function hex(c) { return '#' + c.getHexString(); }
+function matCard(m) {
+  const maps = [['map', 'colour'], ['normalMap', 'normal'], ['roughnessMap', 'roughness'], ['metalnessMap', 'metal'], ['aoMap', 'occlusion'], ['emissiveMap', 'glow']].filter(([k]) => m[k]).map(([, n]) => n);
+  const rough = m.roughness ?? 1, metal = m.metalness ?? 0;
+  const kind = m.transmission > 0 ? 'Glass' : metal > 0.6 ? (rough < 0.25 ? 'Polished metal' : 'Metal') : 'Non-metal';
+  const d = document.createElement('div'); d.className = 'mat';
+  d.innerHTML = `<h3><span class="sw"></span><span class="n"></span></h3><dl>
+    <dt>Type</dt><dd>${kind}</dd>
+    <dt>Base colour</dt><dd>${m.color ? hex(m.color) : 'n/a'}</dd>
+    <dt>Metalness</dt><dd>${metal.toFixed(2)}<div class="bar"><i style="width:${metal * 100}%"></i></div></dd>
+    <dt>Roughness</dt><dd>${rough.toFixed(2)}<div class="bar"><i style="width:${rough * 100}%"></i></div></dd>
+    ${m.clearcoat ? `<dt>Clear coat</dt><dd>${m.clearcoat.toFixed(2)}</dd>` : ''}
+    ${m.transmission ? `<dt>Transmission</dt><dd>${m.transmission.toFixed(2)}</dd>` : ''}
+    <dt>Texture maps</dt><dd>${maps.length ? maps.join(', ') : 'none'}</dd></dl>`;
+  d.querySelector('.n').textContent = pretty(m.name || 'Material'); if (m.color) d.querySelector('.sw').style.background = hex(m.color);
+  return d;
+}
+function select(p) {
+  selected = p; outline.visible = !!p;
+  parts.forEach((q) => q.btn.classList.toggle('on', q === p));
+  const body = $('inspectBody'); body.textContent = '';
+  if (!p) { body.innerHTML = '<p class="hint">Click or tap any part of the spacecraft to see what it is and what it is made of.</p>'; document.body.classList.remove('show-inspect'); }
+  else {
+    const cm = (v) => (v * 100).toFixed(1);
+    const h = document.createElement('div');
+    h.innerHTML = `<p style="font-size:16px;font-weight:650;margin:0 0 10px"></p><dl>
+      <dt>Size (cm)</dt><dd>${cm(p.size.x)} × ${cm(p.size.y)} × ${cm(p.size.z)}</dd>
+      <dt>Pieces</dt><dd>${p.meshes}</dd><dt>Triangles</dt><dd>${Math.round(p.tris).toLocaleString()}</dd></dl>
+      <p class="hint" style="margin:8px 0 0">Sizes are provisional.</p><h2 style="margin-top:14px">Materials</h2>`;
+    h.firstChild.textContent = p.name; body.append(h); p.mats.slice(0, 8).forEach((m) => body.append(matCard(m)));
+    document.body.classList.remove('show-controls'); document.body.classList.add('show-inspect'); $('sheetBtn').setAttribute('aria-pressed', 'false');
+  }
+  applyIsolate();
+}
+function applyIsolate() { const iso = $('isolate').checked && selected; parts.forEach((q) => { q.obj.visible = !iso || q === selected; }); }
+$('isolate').onchange = applyIsolate;
+
+const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(); let down = null;
+canvas.addEventListener('pointerdown', (e) => { down = [e.clientX, e.clientY]; });
+canvas.addEventListener('pointerup', (e) => {
+  if (!down || !root || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+  ptr.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(ptr, camera);
+  const hit = ray.intersectObject(root, true).find((h) => h.object.visible);
+  let p = null;
+  if (hit) for (let o = hit.object; o && !p; o = o.parent) p = parts.find((q) => q.obj === o) || null;
+  select(p);
+});
+
+// ---------- buttons
+$('spinBtn').onclick = (e) => { controls.autoRotate = !controls.autoRotate; e.currentTarget.setAttribute('aria-pressed', controls.autoRotate); };
+$('resetBtn').onclick = () => { select(null); ['explode'].forEach((id) => { $(id).value = 0; $(id).dispatchEvent(new Event('input')); }); $('deploy').value = 1; $('deploy').dispatchEvent(new Event('input')); goTo(-40, 24); };
+$('fsBtn').onclick = () => { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen(); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); };
+if (!document.documentElement.requestFullscreen && !document.documentElement.webkitRequestFullscreen) $('fsBtn').hidden = true;
+$('sheetBtn').onclick = (e) => { const on = document.body.classList.toggle('show-controls'); document.body.classList.remove('show-inspect'); e.currentTarget.setAttribute('aria-pressed', on); };
+
+// ---------- loop
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = clock.getDelta();
+  if (fly) {
+    const k = Math.min(1, (performance.now() - fly.t0) / 700), s = k * k * (3 - 2 * k);
+    camera.position.lerpVectors(fly.from, fly.to, s); controls.target.lerpVectors(fly.tf, center, s); if (k >= 1) fly = null;
+  }
+  applyPose(dt); controls.update(); renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>
