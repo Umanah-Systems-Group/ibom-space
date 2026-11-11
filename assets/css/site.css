@@ -714,3 +714,9 @@ html { scroll-padding-top: 64px; }
 .parts-credit { max-width: var(--max); margin: 22px auto 0; }
 @media (max-width: 760px) { .parts-head { justify-content: center; text-align: center; } .part-card figcaption, .parts-credit { text-align: center; } }
 @media (min-width: 761px) { .parts-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.part-card { position: relative; }
+.part-card .cut { position: absolute; top: 0; left: 0; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+.part-card.show-cut .cut { opacity: 1; }
+@media (hover: hover) { .part-card:hover .cut { opacity: 1; } }
+.cut-btn { position: absolute; top: 14px; right: 14px; z-index: 2; padding: 7px 13px; border-radius: 99px; border: 1px solid rgba(238,240,243,.3); background: rgba(5,7,10,.6); color: var(--ink); font: inherit; font-size: .82rem; cursor: pointer; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.part-card.show-cut .cut-btn, .cut-btn:hover { background: rgba(168,145,255,.3); }
