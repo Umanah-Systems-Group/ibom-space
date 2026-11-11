@@ -87,13 +87,13 @@ if (films.length) {
 }
 
 /* ------------------------------------------------- how the tug sees */
-// The tracking box follows the satellite in the NASA clip (track measured from the film's frames).
+// The tracking box follows the launch ring in the concept render (track exported from the Blender scene).
 // The readout numbers are a simulated approach, labelled as such on the page.
 const navFilm = document.getElementById('nav-film');
 const track = document.getElementById('track');
 if (navFilm && track) {
   let boxes = null, fps = 10;
-  fetch('assets/film/landsat-track.json').then((r) => r.json()).then((d) => { boxes = d.boxes; fps = d.fps; }).catch(() => {});
+  fetch(navFilm.dataset.track || 'assets/film/landsat-track.json').then((r) => r.json()).then((d) => { boxes = d.boxes; fps = d.fps; }).catch(() => {});
   const range = document.getElementById('ro-range'), speed = document.getElementById('ro-speed'), spin = document.getElementById('ro-spin');
   let t0 = performance.now();
   const frame = () => {
@@ -222,7 +222,16 @@ const stepper = (el, n, onStep) => {
 const jobs = document.getElementById('jobs');
 if (jobs) {
   const items = [...jobs.querySelectorAll('.k-jobs-list li')];
-  stepper(jobs, items.length, (i) => items.forEach((li, k) => li.classList.toggle('on', k === i)));
+  const films = [...jobs.querySelectorAll('.k-jobs-film')];
+  let shown = -1;
+  stepper(jobs, items.length, (i) => {
+    items.forEach((li, k) => li.classList.toggle('on', k === i));
+    if (i === shown || !films.length) return; shown = i;
+    films.forEach((v, k) => {
+      if (k === i) { if (v.preload === 'none') { v.preload = 'auto'; v.load(); } v.classList.add('on'); if (!reduced) v.play().catch(() => {}); }
+      else { v.classList.remove('on'); setTimeout(() => { if (!v.classList.contains('on')) v.pause(); }, 1200); }
+    });
+  });
 }
 
 /* cutaway: draw the tug, then light one system at a time */
@@ -262,3 +271,21 @@ if (giant) {
   const onG = () => { const r = giant.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (r.height * 2.2))); giant.style.setProperty('--gy', `${(30 - p * 30).toFixed(1)}%`); giant.style.setProperty('--go', (0.3 + p * 0.7).toFixed(2)); };
   if (reduced) { giant.style.setProperty('--gy', '0%'); giant.style.setProperty('--go', '1'); } else { addEventListener('scroll', onG, { passive: true }); onG(); }
 }
+
+/* ------------------------------------------- scroll film: the clip follows the scroll
+   <section class="scrub" style="--len: 400vh"><div class="scrub-pin"><video class="scrub-film" muted playsinline preload="auto" src="...">
+   <div class="scrub-notes"><p data-at="0.1-0.35">...</p></div></div></section>
+   Clips must be encoded all-intra or with a short GOP (ffmpeg -g 4) so seeking is smooth. */
+document.querySelectorAll('.scrub').forEach((sec) => {
+  const v = sec.querySelector('.scrub-film');
+  const notes = [...sec.querySelectorAll('[data-at]')].map((n) => { const [a, b] = n.dataset.at.split('-').map(Number); return { n, a, b }; });
+  let want = 0, raf = 0;
+  const seek = () => { raf = 0; if (v.readyState >= 1 && v.duration) { const t = want * (v.duration - 0.05); if (Math.abs(v.currentTime - t) > 0.02) v.currentTime = t; } };
+  const onS = () => {
+    want = progress(sec);
+    notes.forEach(({ n, a, b }) => n.classList.toggle('on', want >= a && want < b));
+    if (!raf) raf = requestAnimationFrame(seek);
+  };
+  v.addEventListener('loadedmetadata', onS);
+  addEventListener('scroll', onS, { passive: true }); onS();
+});

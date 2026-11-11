@@ -44,16 +44,16 @@
   <!-- The tug, told as a mission: the film stays, the steps scroll -->
   <section class="tug" id="tug">
     <div class="tug-film" aria-hidden="true">
-      <video class="tf" muted loop playsinline preload="none" poster="assets/film/landsat.jpg"></video>
+      <video class="tf" muted loop playsinline preload="none" poster="assets/film/agb-orbit.jpg"></video>
       <video class="tf" muted loop playsinline preload="none"></video>
-      <p class="credit tug-credit" id="tug-credit">Film: a satellite in orbit</p>
+      <p class="credit tug-credit" id="tug-credit">Concept render</p>
     </div>
     <div class="tug-steps">
-      <div class="tug-intro" data-film="landsat" data-credit="Film: a satellite in orbit">
+      <div class="tug-intro" data-film="agb-orbit" data-credit="Concept render">
         <div class="col" data-reveal>
           <h2>Grab it by the ring. Move it anywhere.</h2>
           <p>Almost every satellite bigger than a CubeSat still carries the ring it was launched on. Agbára, our servicing tug, flies up to it, clamps onto that ring, and becomes the satellite’s engine. Then it lets go and flies to the next one.</p>
-          <p class="muted">Agbára is a design today; the film shows other spacecraft, not Ibom hardware. We aim for ground tests in 2027 and a flight demonstration after that.</p>
+          <p class="muted">Agbára is a design today; these are concept renders of our design, not flight hardware. We aim for ground tests in 2027 and a flight demonstration after that.</p>
           <ol class="step-index" aria-label="Mission steps">
             <li><a href="#step-find">Find</a></li>
             <li><a href="#step-inspect">Close in</a></li>
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <article class="step" id="step-find" data-film="psyche" data-credit="Film: a spacecraft in the clean room">
+      <article class="step" id="step-find" data-film="anya-pov" data-credit="Concept render">
         <div class="col" data-reveal>
           <h3>Find the customer</h3>
           <p>Agbára rides up as a rideshare payload. Its main tank holds iodine as a solid, so it launches unpressurised. Igwe spirals it up to the customer’s orbit and parks it behind, in the same plane.</p>
@@ -73,7 +73,7 @@
         </div>
       </article>
 
-      <article class="step" id="step-inspect" data-film="landsat" data-credit="Film: a satellite in orbit">
+      <article class="step" id="step-inspect" data-film="anya-pov" data-credit="Concept render">
         <div class="col" data-reveal>
           <h3>Close in, slowly</h3>
           <p>Inside the last kilometre the Hall thruster switches off so its plume never touches the customer. Small cold-gas pods do the fine moves.</p>
@@ -81,7 +81,7 @@
         </div>
       </article>
 
-      <article class="step" id="step-capture" data-film="psyche" data-credit="Film: a spacecraft in the clean room">
+      <article class="step" id="step-capture" data-film="agb-jide" data-credit="Concept render">
         <div class="col" data-reveal>
           <h3>Capture</h3>
           <p>At a few centimetres a second, Agbára touches the ring. Jide, the capture system, has sensors on three posts, set 120° apart, trip and the clamp closes. The clamp tolerates 25 mm of misplacement either way, and a motor brake locks it shut.</p>
@@ -89,7 +89,7 @@
         </div>
       </article>
 
-      <article class="step" id="step-push" data-film="array" data-credit="Film: a solar array under test">
+      <article class="step" id="step-push" data-film="igwe-orbit" data-credit="Concept render">
         <div class="col" data-reveal>
           <h3>Become its engine</h3>
           <p>Small test burns measure the combined mass. A gimbal steers the Igwe thruster to push straight through the pair’s centre of mass, and the tug fires in sunlight, on solar power, for days or weeks.</p>
@@ -97,14 +97,14 @@
         </div>
       </article>
 
-      <article class="step" id="step-release" data-film="psyche" data-credit="Film: a spacecraft in the clean room">
+      <article class="step" id="step-release" data-film="agb-release" data-credit="Concept render">
         <div class="col" data-reveal>
           <h3>Let go</h3>
           <p>The clamp opens and the cold-gas pods back the tug away along a safe corridor. For a disposal, the tug lets go low enough that air drag finishes the descent, and the old satellite burns up.</p>
         </div>
       </article>
 
-      <article class="step" id="step-next" data-film="landsat" data-credit="Film: a satellite in orbit">
+      <article class="step" id="step-next" data-film="agb-orbit" data-credit="Concept render">
         <div class="col" data-reveal>
           <h3>On to the next one</h3>
           <p>Constellations put many satellites in each orbital plane, so one tug can serve several customers in turn. When its iodine and cold gas run low, it disposes of itself.</p>
@@ -123,8 +123,8 @@
       </div>
       <figure class="nav-view" data-reveal>
         <div class="nav-frame" data-ui>
-          <video id="nav-film" muted loop playsinline preload="none" poster="assets/film/landsat.jpg" aria-label="Film of a satellite in orbit, with an illustration of the tug’s tracking box and navigation readout laid over it">
-            <source src="assets/film/landsat.mp4" type="video/mp4">
+          <video id="nav-film" muted loop playsinline preload="none" poster="assets/film/anya-pov.jpg" data-track="assets/film/anya-pov-track.json" aria-label="Concept render from Anya’s point of view: the customer’s launch ring comes down towards the tug, with the tracking box and navigation readout laid over it">
+            <source src="assets/film/anya-pov.mp4" type="video/mp4">
           </video>
           <div class="track" id="track" aria-hidden="true"><span class="track-tag">Launch ring locked</span></div>
           <dl class="readout" aria-label="Illustrative navigation readout">
@@ -135,7 +135,7 @@
             <div><dt>Lidar and camera</dt><dd>Agree</dd></div>
           </dl>
         </div>
-        <figcaption>Illustration: our tracking overlay drawn on film of another satellite. The numbers are a simulated approach, not flight data. Our navigation software is in design.</figcaption>
+        <figcaption>Concept render from Anya’s point of view; the tracking box follows the ring in the render. The numbers are a simulated approach, not flight data. Our navigation software is in design.</figcaption>
       </figure>
       <ol class="nav-steps">
         <li data-reveal><h3>Lidar</h3><p>A rendezvous lidar ranges the customer from about 1.2 km, then measures its full 3-D pose from 35 m down to 1.6 m, in sunlight or darkness.</p></li>
@@ -175,10 +175,10 @@
   <!-- Igwe -->
   <section class="product igwe" id="igwe" aria-labelledby="igwe-h">
     <figure class="film" data-reveal>
-      <video class="loop" muted loop playsinline preload="none" poster="assets/film/psyche.jpg" aria-label="Film of a spacecraft being worked on in a clean room">
-        <source src="assets/film/psyche.mp4" type="video/mp4">
+      <video class="loop" muted loop playsinline preload="none" poster="assets/film/igwe-orbit.jpg" aria-label="Concept render circling under Agbára while Igwe fires">
+        <source src="assets/film/igwe-orbit.mp4" type="video/mp4">
       </video>
-      <figcaption>A spacecraft that flies on Hall-effect thrusters, the family Igwe belongs to, during assembly.</figcaption>
+      <figcaption>Concept render: Igwe firing under Agbára, pushing a customer satellite.</figcaption>
     </figure>
     <div class="product-copy">
       <h2 id="igwe-h" data-reveal>Igwe iodine propulsion</h2>
@@ -212,13 +212,13 @@
     </div>
   </section>
 
-  <!-- Caelum showcase spacecraft -->
+  <!-- Unwana, the showcase spacecraft -->
   <section class="showcase" aria-labelledby="showcase-h">
-    <img class="showcase-film" src="assets/film/iss-array.webp" width="1600" height="1064" loading="lazy" alt="Solar arrays of the International Space Station glowing gold above the curve of the Earth">
+    <video class="showcase-film loop" muted loop playsinline preload="none" poster="assets/film/ip1-turn.jpg" aria-label="Concept render of Unwana, our showcase spacecraft, turning on a stand in a dark showroom"><source src="assets/film/ip1-turn.mp4" type="video/mp4"></video>
     <div class="showcase-copy" data-reveal>
-      <h2 id="showcase-h">Caelum, the proof in orbit</h2>
-      <p>A showcase spacecraft that flies Igwe and Caelum together, so customers can watch both work before they buy. It is built on a bought bus and is not for sale. It may also be the first friendly target our tug docks with.</p>
-      <p class="small">Caelum is a design; it has not flown. Photo: solar arrays in orbit.</p>
+      <h2 id="showcase-h">Unwana, the proof in orbit</h2>
+      <p>Unwana (oon-WAH-nah) means “light” in Ibibio. It is our showcase spacecraft, flying Igwe and Caelum together, so customers can watch both work before they buy. It is built on a bought bus and is not for sale. It may also be the first friendly target our tug docks with.</p>
+      <p class="small">Unwana is a design; it has not flown. Concept render.</p>
     </div>
   </section>
 
