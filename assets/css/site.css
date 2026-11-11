@@ -696,3 +696,21 @@ html { scroll-padding-top: 64px; }
   .gallery .credit, .gal-grid figcaption { text-align: center; }
   .status { display: table; margin: 10px auto 0; }
 }
+
+/* parts galleries on the product pages */
+.parts-sec { background: var(--bg); padding: clamp(80px, 10vw, 140px) var(--m); }
+.parts-head { max-width: var(--max); margin: 0 auto 40px; display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 40px; }
+.parts-head h2 { margin: 0; font-size: var(--step-head); font-weight: 520; letter-spacing: -.025em; }
+.parts-head p { margin: 0; max-width: 40ch; color: var(--muted); }
+.parts-grid { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 22px; }
+.part-card { margin: 0; background: var(--surface); border: 1px solid var(--line); overflow: hidden; transition: border-color .3s; }
+.part-card:hover { border-color: rgba(168,145,255,.45); }
+.part-card img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; transition: transform .8s var(--ease-out); }
+.part-card:hover img { transform: scale(1.04); }
+.part-card figcaption { padding: 20px 22px 24px; }
+.part-card h3 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 540; }
+.part-card p { margin: 0; color: rgba(238,240,243,.78); }
+.part-card .spec { margin-top: 12px; color: var(--iodine); font-size: .9rem; }
+.parts-credit { max-width: var(--max); margin: 22px auto 0; }
+@media (max-width: 760px) { .parts-head { justify-content: center; text-align: center; } .part-card figcaption, .parts-credit { text-align: center; } }
+@media (min-width: 761px) { .parts-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
