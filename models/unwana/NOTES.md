@@ -131,6 +131,7 @@ Animate the deployment with the `Hinge_L_A/B` and `Hinge_R_A/B` empties (Z rotat
 | 10 views | 3840x2160, 200 samples, adaptive, OIDN | 288–438 s (Bottom: 70 s, no floor) |
 | Close-ups | 2560x1440, 256 samples, f/2.8–3.2 | 132–437 s |
 | Preview | 1920x1080, 128 samples | about 60 s |
+| Turntable | 72 frames, 1920x1080, 96 samples, OIDN, H.264 at 24 fps | about 60 s per frame |
 
 The close-up files are `closeup-optical-terminal`, `closeup-mli-seam`, `closeup-nozzle`,
 `closeup-solar-hinge` and `closeup-imager`.
