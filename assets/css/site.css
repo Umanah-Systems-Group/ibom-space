@@ -724,3 +724,8 @@ html { scroll-padding-top: 64px; }
 /* Nyoka and Mafuta at work */
 .at-work { border-top: 1px solid var(--line); }
 .at-work video { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
+
+/* keep the film titles readable over bright interiors */
+.capture .film-head h2, .capture .film-head .eyebrow { text-shadow: 0 2px 18px rgba(0,0,0,.85), 0 1px 3px rgba(0,0,0,.9); }
+.capture .film-head h2 span { color: rgba(238,240,243,.78); }
+@media (max-width: 760px) { .capture .film-shade { background: linear-gradient(180deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.55) 24%, rgba(0,0,0,0) 36%, rgba(0,0,0,0) 52%, #000 72%); } }
