@@ -143,6 +143,8 @@ if (heroFilm && heroType && heroH && heroType.getContext) {
     heroType.width = Math.round(W * dpr); heroType.height = Math.round(H * dpr);
   };
   const draw = () => {
+    // the canvas now carries the words, so hide the real heading at once: never two copies on screen
+    document.body.classList.add('type-live');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
     const cs = getComputedStyle(heroH);
@@ -170,7 +172,11 @@ if (heroFilm && heroType && heroH && heroType.getContext) {
   };
   const loop = () => { draw(); if (running) requestAnimationFrame(loop); };
   const start = () => { if (!running) { running = true; document.body.classList.add('type-live'); requestAnimationFrame(loop); } };
+  // follow the words while they rise in, even before the film plays, so the canvas copy never lags behind
+  const intro = performance.now();
+  const follow = () => { if (!running) draw(); if (performance.now() - intro < 2200) requestAnimationFrame(follow); };
   size(); addEventListener('resize', () => { size(); draw(); });
+  document.fonts?.ready.then(() => requestAnimationFrame(follow));
   document.fonts?.ready.then(() => { size(); draw(); });
   heroFilm.addEventListener('loadeddata', () => { document.body.classList.add('type-live'); draw(); });
   heroFilm.addEventListener('playing', start);
